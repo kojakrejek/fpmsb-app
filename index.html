@@ -19,7 +19,7 @@
       --btn-blue: #007bff; --btn-green: #28a745; --btn-gray: #6c757d; --btn-purple: #6f42c1; --btn-red: #dc3545; --btn-orange: #fd7e14;
     }
     
-    /* HIDE SCROLLBAR (Request #2) */
+    /* HIDE SCROLLBAR */
     ::-webkit-scrollbar { display: none; }
     * { -ms-overflow-style: none;  scrollbar-width: none; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     
@@ -70,25 +70,18 @@
     /* Disabled Input Style */
     input:disabled { background-color: #e9ecef; color: #6c757d; cursor: not-allowed; border-color: #dee2e6; }
 
-    /* STATUS BOX */
-    .info-status { background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: 4px; padding: 10px; margin: 15px 0; display: none; justify-content: space-between; align-items: center; font-size: 12px; color: #155724; }
-    .info-item { text-align: center; width: 45%; }
-    .info-item b { display: block; font-size: 15px; margin-top: 2px; color: #000; }
-    .info-divider { width: 1px; height: 35px; background-color: #9ccca6; opacity: 0.6; }
-    .status-baki.done b { color: #28a745; } .status-baki b { color: #dc3545; }
-
-    #nilai { font-size: 24px; font-weight: bold; text-align: center; color: #000; background-color: #fff; border: 2px solid #ccc; }
-    #nilai:focus { border-color: var(--btn-blue); }
-    #nilai::placeholder { color: #999; font-size: 14px; font-weight: normal; }
-
-    input[type="date"] { position: relative; min-height: 45px; }
-    input[type="date"]::-webkit-calendar-picker-indicator { position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; background: transparent; cursor: pointer; }
-    input[type="date"]::after { content: '📅'; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; opacity: 0.6; }
-
+    /* BUTTONS */
     .btn-group { display: flex; gap: 10px; margin-top: 20px; }
     button { width: 100%; padding: 14px; border: none; border-radius: 4px; font-family: 'Roboto', sans-serif; font-weight: bold; font-size: 14px; cursor: pointer; text-transform: uppercase; color: white; touch-action: manipulation; transition: all 0.2s; }
     button:active { opacity: 0.8; }
-    button:disabled { background-color: #ccc !important; color: #666 !important; cursor: not-allowed; }
+    
+    /* BUTTON DISABLED STATE (LOCK) */
+    button:disabled { 
+        background-color: #cccccc !important; 
+        color: #666666 !important; 
+        cursor: not-allowed; 
+        box-shadow: none;
+    }
     
     .btn-primary { background-color: var(--btn-blue); }
     .btn-success { background-color: var(--btn-green); }
@@ -105,6 +98,13 @@
     .msg-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
     .msg-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
     .msg-info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+
+    /* STATUS BOX */
+    .info-status { background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: 4px; padding: 10px; margin: 15px 0; display: none; justify-content: space-between; align-items: center; font-size: 12px; color: #155724; }
+    .info-item { text-align: center; width: 45%; }
+    .info-item b { display: block; font-size: 15px; margin-top: 2px; color: #000; }
+    .info-divider { width: 1px; height: 35px; background-color: #9ccca6; opacity: 0.6; }
+    .status-baki.done b { color: #28a745; } .status-baki b { color: #dc3545; }
 
     .report-area { margin-top: 15px; display: none; }
     textarea { font-family: monospace; font-size: 12px; background-color: #eee; color: #333; border: 1px solid #ccc; width:100%; }
@@ -163,7 +163,7 @@
 
       <div id="wrap-team-hasil" style="margin-top:15px;">
         <label id="lbl-team-hasil">TEAM / BLOK</label>
-        <select id="sel-team-hasil"></select>
+        <select id="sel-team-hasil" onchange="clearInput('Hasil')"></select>
       </div>
 
       <div id="box-status-tuai" class="info-status">
@@ -174,16 +174,15 @@
 
       <div style="margin-top:15px;">
         <label id="lbl-val-hasil">NILAI (TAN)</label>
-        <input type="text" id="val-hasil" placeholder="Contoh: =5.5+2.2" inputmode="decimal" style="font-size:24px; text-align:center; font-weight:bold;">
+        <input type="text" id="val-hasil" placeholder="Contoh: =5.5+2.2" inputmode="decimal" style="font-size:24px; text-align:center; font-weight:bold;" oninput="checkInput('Hasil')">
       </div>
 
       <div class="btn-group">
-        <button id="btnSimpanHasil" class="btn-primary" onclick="saveData('hasil')">SIMPAN DATA</button>
+        <button id="btnSimpanHasil" class="btn-primary" onclick="saveData('hasil')" disabled>SIMPAN DATA</button>
       </div>
       
       <div style="margin-top:20px; border-top:1px solid #eee; padding-top:15px;">
         <button id="btnRefRumusan" class="btn-secondary" onclick="runAdmin('refreshRumusan')" style="width:100%; display:none; margin-bottom:10px;">🔄 REFRESH RUMUSAN</button>
-        
         <button id="btnSaveMaster" class="btn-success" onclick="runAdmin('saveMaster')" style="width:100%;">📥 SAVE MASTER (BULAN INI)</button>
       </div>
 
@@ -206,16 +205,16 @@
 
       <div style="margin-top:15px;">
         <label>TEAM / BLOK</label>
-        <select id="sel-team-muda"></select>
+        <select id="sel-team-muda" onchange="clearInput('Muda')"></select>
       </div>
 
       <div style="margin-top:15px;">
         <label>BILANGAN TANDAN</label>
-        <input type="number" id="val-muda" placeholder="0" style="font-size:24px; text-align:center; font-weight:bold;">
+        <input type="number" id="val-muda" placeholder="0" style="font-size:24px; text-align:center; font-weight:bold;" oninput="checkInput('Muda')">
       </div>
 
       <div class="btn-group">
-        <button class="btn-green" onclick="saveData('muda')">SIMPAN BTB MUDA</button>
+        <button id="btnSimpanMuda" class="btn-green" onclick="saveData('muda')" disabled>SIMPAN BTB MUDA</button>
       </div>
       <div id="msg-muda" class="msg-box"></div>
     </div>
@@ -226,14 +225,14 @@
     <div class="card">
       <div style="margin-bottom:15px; display:flex; gap:10px;">
         <input type="date" id="date-penalti" style="flex:1">
-        <select id="type-penalti" style="width:130px">
+        <select id="type-penalti" style="width:130px" onchange="clearInput('Penalti')">
           <option value="MENGKAL">MENGKAL</option>
           <option value="LAMA">LAMA</option>
         </select>
       </div>
 
       <label>PERINGKAT</label>
-      <select id="sel-pkt-penalti">
+      <select id="sel-pkt-penalti" onchange="clearInput('Penalti')">
         <option value="PKT001">PKT 001</option>
         <option value="PKT001G">PKT 001G</option>
         <option value="PKT002">PKT 002</option>
@@ -243,11 +242,11 @@
 
       <div style="margin-top:15px;">
         <label>BILANGAN TANDAN</label>
-        <input type="number" id="val-penalti" placeholder="0" style="font-size:24px; text-align:center; font-weight:bold;">
+        <input type="number" id="val-penalti" placeholder="0" style="font-size:24px; text-align:center; font-weight:bold;" oninput="checkInput('Penalti')">
       </div>
 
       <div class="btn-group">
-        <button class="btn-red" onclick="saveData('penalti')">SIMPAN PENALTI</button>
+        <button id="btnSimpanPenalti" class="btn-red" onclick="saveData('penalti')" disabled>SIMPAN PENALTI</button>
       </div>
       <div id="msg-penalti" class="msg-box"></div>
     </div>
@@ -269,16 +268,16 @@
 
       <div style="margin-top:15px;">
         <label>TEAM / BLOK</label>
-        <select id="sel-team-tandan"></select>
+        <select id="sel-team-tandan" onchange="clearInput('Tandan')"></select>
       </div>
 
       <div style="margin-top:15px;">
         <label>BILANGAN TANDAN (BIJI)</label>
-        <input type="number" id="val-tandan" placeholder="0" style="font-size:24px; text-align:center; font-weight:bold;">
+        <input type="number" id="val-tandan" placeholder="0" style="font-size:24px; text-align:center; font-weight:bold;" oninput="checkInput('Tandan')">
       </div>
 
       <div class="btn-group">
-        <button class="btn-orange" onclick="saveData('tandan')">SIMPAN TANDAN</button>
+        <button id="btnSimpanTandan" class="btn-orange" onclick="saveData('tandan')" disabled>SIMPAN TANDAN</button>
       </div>
       <div id="msg-tandan" class="msg-box"></div>
     </div>
@@ -306,7 +305,7 @@
 
 <script>
 // --- CONFIGURATION ---
-const API_URL = "https://script.google.com/macros/s/AKfycbzKWkhwivohmFHHbtCzCkTO-QRj8S5JolC48_jYRKwQQBKgzovSpYflw2IRMLg6h4YheQ/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbwuHUslbaU4iNVpdnoQykEMuIxT_fUzKkdL793KPxAbHRSNbwZtAqg9j9V5CXSc0UGFMw/exec"; 
 
 // Data Configs
 const HASIL_CFG = {
@@ -345,10 +344,7 @@ window.onload = () => {
   renderTeamMuda();
   renderTeamTandan();
   
-  // PWA Service Worker
   if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
-
-  // Background Fetch Stats
   fetchStats();
 };
 
@@ -365,14 +361,30 @@ function nav(id, el) {
   toggleMenu();
 }
 
+// --- HELPER: AUTO CLEAR & LOCK BUTTON ---
+function clearInput(type) {
+    document.getElementById(`val-${type.toLowerCase()}`).value = "";
+    checkInput(type);
+}
+
+function checkInput(type) {
+    const val = document.getElementById(`val-${type.toLowerCase()}`).value;
+    const btn = document.getElementById(`btnSimpan${type}`);
+    if(btn) btn.disabled = (val.trim() === "");
+}
+
 // --- RENDER FUNCTIONS ---
 function renderPeringkatHasil() {
   const mode = document.getElementById('mode-hasil').value;
   const sel = document.getElementById('sel-pkt-hasil');
+  // Kalau mode PUS_TUAI, takde Rumusan
   const list = (mode === "PUS_TUAI") ? HASIL_CFG.pkt.filter(x => x !== "RUMUSAN") : HASIL_CFG.pkt;
+  
   sel.innerHTML = list.map(x => `<option>${x}</option>`).join("");
   document.getElementById('lbl-val-hasil').textContent = (mode==="TAN") ? "NILAI (TAN)" : "NILAI (HEKTAR)";
+  
   renderTeamHasil();
+  clearInput('Hasil'); // Clear bila tukar mode
 }
 
 function renderTeamHasil() {
@@ -384,33 +396,33 @@ function renderTeamHasil() {
   const info = document.getElementById('info-luas');
   const box = document.getElementById('box-status-tuai');
   
-  // ELEMENTS UNTUK LOGIK RUMUSAN
+  // LOGIC BUTTON VISIBILITY
   const btnRefRumusan = document.getElementById('btnRefRumusan');
   const btnSimpan = document.getElementById('btnSimpanHasil');
   const inpVal = document.getElementById('val-hasil');
 
-  // 1. LOGIK BUTTON & INPUT RUMUSAN
   if(p === "RUMUSAN") {
-      btnRefRumusan.style.display = "block"; // Tunjuk button Refresh
-      wrap.style.display = 'none'; // Sembunyi Team (Rumusan tiada team)
+      btnRefRumusan.style.display = "block"; 
+      wrap.style.display = 'none'; 
       
-      // Request #1: Lock Input & Hide Save Button
+      // LOCK INPUT FOR RUMUSAN
       inpVal.disabled = true;
       inpVal.style.backgroundColor = "#e9ecef";
       inpVal.placeholder = "Tekan Refresh 🔄";
       btnSimpan.style.display = "none";
   } else {
-      // Revert ke asal
       btnRefRumusan.style.display = "none";
+      
+      // UNLOCK FOR NORMAL
       inpVal.disabled = false;
       inpVal.style.backgroundColor = "#fff";
       inpVal.placeholder = "Contoh: =5.5+2.2";
       btnSimpan.style.display = "block";
 
-      if(p !== "PKT001") wrap.style.display = 'block'; else wrap.style.display = 'none'; // PKT001 tiada team
+      if(p !== "PKT001") wrap.style.display = 'block'; else wrap.style.display = 'none';
   }
 
-  // 2. LOGIK STATUS BOX
+  // LOGIC STATUS BOX
   if(HARVEST_STATS && HARVEST_STATS[p]) {
      info.textContent = `• ${HARVEST_STATS[p].luas.toFixed(2)} Ha`;
      if(mode === "PUS_TUAI" && p !== "RUMUSAN") {
@@ -425,24 +437,28 @@ function renderTeamHasil() {
      info.textContent = ""; box.style.display = 'none';
   }
 
-  // 3. DROPDOWN TEAM FILL
+  // DROPDOWN TEAM FILL
   if(p !== "RUMUSAN" && p !== "PKT001") {
     document.getElementById('lbl-team-hasil').textContent = (p==="PKT004") ? "BLOK" : "TEAM";
     const teams = HASIL_CFG.teams[p] || ["1","2","3","4","5"];
     sel.innerHTML = teams.map((t,i) => `<option value="${i}">${t}</option>`).join("");
   }
+  
+  clearInput('Hasil'); // Clear bila tukar peringkat
 }
 
 function renderTeamMuda() {
   const p = document.getElementById('sel-pkt-muda').value;
   const sel = document.getElementById('sel-team-muda');
   sel.innerHTML = (MUDA_CFG[p] || []).map(t => `<option value="${t}">${t}</option>`).join("");
+  clearInput('Muda');
 }
 
 function renderTeamTandan() {
   const p = document.getElementById('sel-pkt-tandan').value;
   const sel = document.getElementById('sel-team-tandan');
   sel.innerHTML = (TANDAN_CFG[p] || []).map(t => `<option value="${t}">${t}</option>`).join("");
+  clearInput('Tandan');
 }
 
 // --- SAVE HANDLER ---
@@ -501,7 +517,7 @@ async function saveData(type) {
     document.getElementById('loader').style.display = 'none';
     if(res.ok) {
       showMsg(msgEl, res.message, true);
-      document.getElementById(`val-${type}`).value = "";
+      clearInput(type.charAt(0).toUpperCase() + type.slice(1)); // Auto Clear after save
       if(type==='hasil' && document.getElementById('mode-hasil').value==="PUS_TUAI") fetchStats();
     } else showMsg(msgEl, res.message, false);
   } catch(e) {
@@ -521,7 +537,6 @@ async function fetchStats() {
 
 async function runAdmin(act) {
   if(act !== 'refreshRumusan' && !confirm("Anda pasti?")) return;
-  
   document.getElementById('loader').style.display = 'flex';
   const d = document.getElementById('date-hasil').value;
   const p = document.getElementById('sel-pkt-hasil').value;
@@ -530,15 +545,10 @@ async function runAdmin(act) {
       const req = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: act, data: { peringkat: p, fullDate: d, day: Number(d.split('-')[2]) } }) });
       const res = await req.json();
       document.getElementById('loader').style.display = 'none';
-      
       if(res.ok) {
-          if(act === 'refreshRumusan' && res.tan) {
-              document.getElementById('val-hasil').value = Number(res.tan).toFixed(2);
-          }
-          alert(res.message || "Selesai.");
-      } else {
-          alert("Gagal: " + res.message);
-      }
+          if(act === 'refreshRumusan' && res.tan) document.getElementById('val-hasil').value = Number(res.tan).toFixed(2);
+          showMsg(document.getElementById('msg-hasil'), res.message || "Selesai", true);
+      } else alert("Gagal: " + res.message);
   } catch(e) {
       document.getElementById('loader').style.display = 'none';
       alert("Error Sambungan.");
