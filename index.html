@@ -64,7 +64,6 @@
     label:first-child { margin-top: 0; }
     #luasDisplay { color: #155724; font-weight: bold; font-size: 12px; }
 
-    /* INPUT STYLE UNTUK FORMULA */
     select, input, textarea { width: 100%; padding: 12px; background-color: var(--input-bg); border: 1px solid var(--border-color); border-radius: 4px; font-size: 16px; color: #000; outline: none; font-family: 'Roboto', sans-serif; appearance: none; -webkit-appearance: none; }
     select:focus, input:focus { border-color: var(--btn-blue); background-color: #fff; }
     
@@ -77,7 +76,12 @@
     button:active { opacity: 0.8; }
     
     /* BUTTON DISABLED STATE (LOCK) */
-    button:disabled { background-color: #cccccc !important; color: #666666 !important; cursor: not-allowed; box-shadow: none; }
+    button:disabled { 
+        background-color: #cccccc !important; 
+        color: #666666 !important; 
+        cursor: not-allowed; 
+        box-shadow: none;
+    }
     
     .btn-primary { background-color: var(--btn-blue); }
     .btn-success { background-color: var(--btn-green); }
@@ -283,6 +287,7 @@
     <div class="pill">LAPORAN</div>
     <div class="card">
       <div class="divider"><span class="sec-title">JANA LAPORAN</span></div>
+      
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
         <button class="btn-primary" onclick="getReport('PO')">PO</button>
         <button class="btn-primary" onclick="getReport('RUMUSAN')">RUMUSAN</button>
@@ -300,7 +305,7 @@
 
 <script>
 // --- CONFIGURATION ---
-const API_URL = "https://script.google.com/macros/s/AKfycbwjOwscFhAkVxdAQ4JrLerZ7mr5PHp-AyYyz4JMTTO5i-LzHzKuHz1FWuCkAJdd3re3Mg/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbxwiU7xAXLfdH-_GOB3IAWkdaFdUU5Isnd1cKT4yj6FePpc4MSr9eW6KHfWYCnN74_E/exec"; 
 
 // Data Configs
 const HASIL_CFG = {
