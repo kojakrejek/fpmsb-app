@@ -305,7 +305,7 @@
 
 <script>
 // --- CONFIGURATION ---
-const API_URL = "https://script.google.com/macros/s/AKfycbwuHUslbaU4iNVpdnoQykEMuIxT_fUzKkdL793KPxAbHRSNbwZtAqg9j9V5CXSc0UGFMw/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbxoOyZi4kPGyGFiSq_Ny_sQn8lIhtu_I0pijevAPlYcLEUEMtNNP-JwZlPTCVaPuRtbxw/exec"; 
 
 // Data Configs
 const HASIL_CFG = {
@@ -363,28 +363,32 @@ function nav(id, el) {
 
 // --- HELPER: AUTO CLEAR & LOCK BUTTON ---
 function clearInput(type) {
-    document.getElementById(`val-${type.toLowerCase()}`).value = "";
-    checkInput(type);
+    const el = document.getElementById('val-' + type.toLowerCase());
+    if(el) {
+        el.value = "";
+        checkInput(type);
+    }
 }
 
 function checkInput(type) {
-    const val = document.getElementById(`val-${type.toLowerCase()}`).value;
-    const btn = document.getElementById(`btnSimpan${type}`);
-    if(btn) btn.disabled = (val.trim() === "");
+    const val = document.getElementById('val-' + type.toLowerCase()).value;
+    const btn = document.getElementById('btnSimpan' + type);
+    if(btn) {
+        btn.disabled = (val.trim() === "");
+    }
 }
 
 // --- RENDER FUNCTIONS ---
 function renderPeringkatHasil() {
   const mode = document.getElementById('mode-hasil').value;
   const sel = document.getElementById('sel-pkt-hasil');
-  // Kalau mode PUS_TUAI, takde Rumusan
   const list = (mode === "PUS_TUAI") ? HASIL_CFG.pkt.filter(x => x !== "RUMUSAN") : HASIL_CFG.pkt;
   
   sel.innerHTML = list.map(x => `<option>${x}</option>`).join("");
   document.getElementById('lbl-val-hasil').textContent = (mode==="TAN") ? "NILAI (TAN)" : "NILAI (HEKTAR)";
   
   renderTeamHasil();
-  clearInput('Hasil'); // Clear bila tukar mode
+  clearInput('Hasil'); 
 }
 
 function renderTeamHasil() {
@@ -418,6 +422,9 @@ function renderTeamHasil() {
       inpVal.style.backgroundColor = "#fff";
       inpVal.placeholder = "Contoh: =5.5+2.2";
       btnSimpan.style.display = "block";
+      
+      // RE-CHECK LOCK STATE FOR NORMAL
+      checkInput('Hasil');
 
       if(p !== "PKT001") wrap.style.display = 'block'; else wrap.style.display = 'none';
   }
@@ -443,8 +450,6 @@ function renderTeamHasil() {
     const teams = HASIL_CFG.teams[p] || ["1","2","3","4","5"];
     sel.innerHTML = teams.map((t,i) => `<option value="${i}">${t}</option>`).join("");
   }
-  
-  clearInput('Hasil'); // Clear bila tukar peringkat
 }
 
 function renderTeamMuda() {
@@ -537,6 +542,7 @@ async function fetchStats() {
 
 async function runAdmin(act) {
   if(act !== 'refreshRumusan' && !confirm("Anda pasti?")) return;
+  
   document.getElementById('loader').style.display = 'flex';
   const d = document.getElementById('date-hasil').value;
   const p = document.getElementById('sel-pkt-hasil').value;
