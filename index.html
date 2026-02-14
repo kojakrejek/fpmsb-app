@@ -64,6 +64,7 @@
     label:first-child { margin-top: 0; }
     #luasDisplay { color: #155724; font-weight: bold; font-size: 12px; }
 
+    /* INPUT STYLE UNTUK FORMULA */
     select, input, textarea { width: 100%; padding: 12px; background-color: var(--input-bg); border: 1px solid var(--border-color); border-radius: 4px; font-size: 16px; color: #000; outline: none; font-family: 'Roboto', sans-serif; appearance: none; -webkit-appearance: none; }
     select:focus, input:focus { border-color: var(--btn-blue); background-color: #fff; }
     
@@ -76,12 +77,7 @@
     button:active { opacity: 0.8; }
     
     /* BUTTON DISABLED STATE (LOCK) */
-    button:disabled { 
-        background-color: #cccccc !important; 
-        color: #666666 !important; 
-        cursor: not-allowed; 
-        box-shadow: none;
-    }
+    button:disabled { background-color: #cccccc !important; color: #666666 !important; cursor: not-allowed; box-shadow: none; }
     
     .btn-primary { background-color: var(--btn-blue); }
     .btn-success { background-color: var(--btn-green); }
@@ -210,7 +206,7 @@
 
       <div style="margin-top:15px;">
         <label>BILANGAN TANDAN</label>
-        <input type="number" id="val-muda" placeholder="0" style="font-size:24px; text-align:center; font-weight:bold;" oninput="checkInput('Muda')">
+        <input type="text" id="val-muda" placeholder="Contoh: =10+5" inputmode="decimal" style="font-size:24px; text-align:center; font-weight:bold;" oninput="checkInput('Muda')">
       </div>
 
       <div class="btn-group">
@@ -242,7 +238,7 @@
 
       <div style="margin-top:15px;">
         <label>BILANGAN TANDAN</label>
-        <input type="number" id="val-penalti" placeholder="0" style="font-size:24px; text-align:center; font-weight:bold;" oninput="checkInput('Penalti')">
+        <input type="text" id="val-penalti" placeholder="Contoh: =3+2" inputmode="decimal" style="font-size:24px; text-align:center; font-weight:bold;" oninput="checkInput('Penalti')">
       </div>
 
       <div class="btn-group">
@@ -273,7 +269,7 @@
 
       <div style="margin-top:15px;">
         <label>BILANGAN TANDAN (BIJI)</label>
-        <input type="number" id="val-tandan" placeholder="0" style="font-size:24px; text-align:center; font-weight:bold;" oninput="checkInput('Tandan')">
+        <input type="text" id="val-tandan" placeholder="Contoh: =50+25" inputmode="decimal" style="font-size:24px; text-align:center; font-weight:bold;" oninput="checkInput('Tandan')">
       </div>
 
       <div class="btn-group">
@@ -287,7 +283,6 @@
     <div class="pill">LAPORAN</div>
     <div class="card">
       <div class="divider"><span class="sec-title">JANA LAPORAN</span></div>
-      
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
         <button class="btn-primary" onclick="getReport('PO')">PO</button>
         <button class="btn-primary" onclick="getReport('RUMUSAN')">RUMUSAN</button>
@@ -305,7 +300,7 @@
 
 <script>
 // --- CONFIGURATION ---
-const API_URL = "https://script.google.com/macros/s/AKfycby7bTjD0UGYgbpr8UluDRbwXz2_8RaOCkCzAWKkwxDNxLL3hPQU552D0Po-u9OgoQEieQ/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbzbQDXrADpAfGtRUd4-pYFQ7YdCPQ_3JevBnsC-UxJPkYGpgdMDOH6nkfKgzgF2LHbTPA/exec"; 
 
 // Data Configs
 const HASIL_CFG = {
@@ -366,7 +361,7 @@ function clearInput(type) {
     const el = document.getElementById('val-' + type.toLowerCase());
     if(el) {
         el.value = "";
-        checkInput(type);
+        checkInput(type); // Re-check button state
     }
 }
 
@@ -374,6 +369,7 @@ function checkInput(type) {
     const val = document.getElementById('val-' + type.toLowerCase()).value;
     const btn = document.getElementById('btnSimpan' + type);
     if(btn) {
+        // Disable if empty or whitespace
         btn.disabled = (val.trim() === "");
     }
 }
@@ -400,7 +396,7 @@ function renderTeamHasil() {
   const info = document.getElementById('info-luas');
   const box = document.getElementById('box-status-tuai');
   
-  // LOGIC BUTTON VISIBILITY
+  // LOGIC BUTTON VISIBILITY (RUMUSAN VS NORMAL)
   const btnRefRumusan = document.getElementById('btnRefRumusan');
   const btnSimpan = document.getElementById('btnSimpanHasil');
   const inpVal = document.getElementById('val-hasil');
@@ -423,7 +419,7 @@ function renderTeamHasil() {
       inpVal.placeholder = "Contoh: =5.5+2.2";
       btnSimpan.style.display = "block";
       
-      // RE-CHECK LOCK STATE FOR NORMAL
+      // RE-CHECK LOCK STATE FOR NORMAL (Important!)
       checkInput('Hasil');
 
       if(p !== "PKT001") wrap.style.display = 'block'; else wrap.style.display = 'none';
@@ -466,32 +462,45 @@ function renderTeamTandan() {
   clearInput('Tandan');
 }
 
-// --- SAVE HANDLER ---
+// --- SAVE HANDLER (UNIVERSAL WITH FORMULA CHECK) ---
 async function saveData(type) {
   let action, payload = {};
   let msgEl = document.getElementById(`msg-${type}`);
   document.getElementById('loader').style.display = 'flex';
 
+  // --- GET VALUE & APPLY FORMULA LOGIC (UNIFIED) ---
+  let rawVal = document.getElementById(`val-${type}`).value;
+  
+  if(!rawVal.trim() && type !== 'hasil') { 
+      // Safety check (though button is disabled)
+      alert("Isi nilai!"); 
+      document.getElementById('loader').style.display='none'; 
+      return; 
+  }
+
+  // Auto Add '=' if math symbols exist and not present
+  if (rawVal.match(/[+\-*\/]/) && !rawVal.trim().startsWith('=')) {
+      rawVal = "=" + rawVal;
+  }
+  // ------------------------------------------------
+
   if (type === 'hasil') {
     const mode = document.getElementById('mode-hasil').value;
-    const val = document.getElementById('val-hasil').value;
-    if(!val) { alert("Isi nilai!"); document.getElementById('loader').style.display='none'; return; }
-    let fVal = (val.match(/[+\-*\/]/) && !val.startsWith('=')) ? "=" + val : val;
     payload = {
       peringkat: document.getElementById('sel-pkt-hasil').value,
       idx: document.getElementById('sel-team-hasil').value,
       day: Number(document.getElementById('date-hasil').value.split('-')[2]),
       fullDate: document.getElementById('date-hasil').value
     };
-    if (mode === "TAN") { action = "saveTan"; payload.tan = fVal; } 
-    else { action = "savePusTuai"; payload.tarikh = payload.fullDate; payload.hektar = fVal; }
+    if (mode === "TAN") { action = "saveTan"; payload.tan = rawVal; } 
+    else { action = "savePusTuai"; payload.tarikh = payload.fullDate; payload.hektar = rawVal; }
   } 
   else if (type === 'muda') {
     action = "saveMuda";
     payload = {
       peringkat: document.getElementById('sel-pkt-muda').value,
       teamName: document.getElementById('sel-team-muda').value,
-      val: document.getElementById('val-muda').value,
+      val: rawVal, // Use processed value
       tarikh: document.getElementById('date-muda').value
     };
   } 
@@ -500,7 +509,7 @@ async function saveData(type) {
     payload = {
       type: document.getElementById('type-penalti').value,
       peringkat: document.getElementById('sel-pkt-penalti').value,
-      val: document.getElementById('val-penalti').value,
+      val: rawVal, // Use processed value
       tarikh: document.getElementById('date-penalti').value
     };
   }
@@ -509,12 +518,10 @@ async function saveData(type) {
     payload = {
       peringkat: document.getElementById('sel-pkt-tandan').value,
       teamName: document.getElementById('sel-team-tandan').value,
-      val: document.getElementById('val-tandan').value,
+      val: rawVal, // Use processed value
       tarikh: document.getElementById('date-tandan').value
     };
   }
-
-  if(!payload.val && type !== 'hasil') { alert("Isi nilai!"); document.getElementById('loader').style.display='none'; return; }
 
   try {
     const req = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action, data: payload }) });
@@ -522,7 +529,7 @@ async function saveData(type) {
     document.getElementById('loader').style.display = 'none';
     if(res.ok) {
       showMsg(msgEl, res.message, true);
-      clearInput(type.charAt(0).toUpperCase() + type.slice(1)); // Auto Clear after save
+      clearInput(type.charAt(0).toUpperCase() + type.slice(1)); // Auto Clear & Lock
       if(type==='hasil' && document.getElementById('mode-hasil').value==="PUS_TUAI") fetchStats();
     } else showMsg(msgEl, res.message, false);
   } catch(e) {
