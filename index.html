@@ -37,10 +37,10 @@
 
     .app-container { width: 100%; max-width: 480px; padding: 15px; }
 
-    /* --- MODERN HEADER --- */
+    /* --- HEADER --- */
     .header {
       position: fixed; top: 0; left: 0; width: 100%; height: 65px;
-      background: linear-gradient(135deg, #4a90e2, #9013fe); /* GRADIENT */
+      background: linear-gradient(135deg, #4a90e2, #9013fe); 
       color: white; display: flex; align-items: center; padding: 0 20px;
       z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
       border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
@@ -96,13 +96,13 @@
     .input-wrapper i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #bdc3c7; }
     
     select, input, textarea { 
-      width: 100%; padding: 12px 15px 12px 40px; /* Space for Icon */
+      width: 100%; padding: 12px 15px 12px 40px; 
       border: 2px solid #ecf0f1; border-radius: 10px; 
       font-size: 15px; font-family: 'Poppins', sans-serif; color: #333;
       transition: 0.3s; background: #fff; appearance: none;
     }
     select:focus, input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1); }
-    input:disabled { background: #f8f9fa; border-color: #eee; color: #aaa; }
+    input:disabled { background: #f8f9fa; border-color: #eee; color: #aaa; cursor: not-allowed; }
 
     /* SPECIAL INPUT (BIG NUMBER) */
     .big-input { 
@@ -192,62 +192,40 @@
     <div class="pill">MODE: HASIL</div>
     <div class="card">
       <div style="display:flex; gap:10px; margin-bottom:15px;">
-        <div class="input-wrapper" style="flex:1">
-          <i class="material-icons">calendar_today</i>
-          <input type="date" id="date-hasil" onchange="renderPeringkatHasil()">
-        </div>
-        <div class="input-wrapper" style="width:120px">
-          <i class="material-icons">tune</i>
-          <select id="mode-hasil" onchange="renderPeringkatHasil()">
-            <option value="TAN">TAN</option>
-            <option value="PUS_TUAI">HEKTAR</option>
-          </select>
-        </div>
+        <div class="input-wrapper" style="flex:1"><i class="material-icons">calendar_today</i><input type="date" id="date-hasil" onchange="renderPeringkatHasil()"></div>
+        <div class="input-wrapper" style="width:120px"><i class="material-icons">tune</i><select id="mode-hasil" onchange="renderPeringkatHasil()"><option value="TAN">TAN</option><option value="PUS_TUAI">HEKTAR</option></select></div>
       </div>
 
       <div class="input-group">
         <label>PERINGKAT <span id="info-luas" style="float:right; color:var(--success);"></span></label>
-        <div class="input-wrapper">
-          <i class="material-icons">layers</i>
-          <select id="sel-pkt-hasil" onchange="renderTeamHasil()"></select>
-        </div>
+        <div class="input-wrapper"><i class="material-icons">layers</i><select id="sel-pkt-hasil" onchange="renderTeamHasil()"></select></div>
       </div>
 
       <div class="input-group" id="wrap-team-hasil">
         <label id="lbl-team-hasil">TEAM / BLOK</label>
-        <div class="input-wrapper">
-          <i class="material-icons">groups</i>
-          <select id="sel-team-hasil" onchange="clearInput('Hasil')"></select>
-        </div>
+        <div class="input-wrapper"><i class="material-icons">groups</i><select id="sel-team-hasil" onchange="clearInput('hasil')"></select></div>
       </div>
 
       <div id="box-status-tuai" class="info-status" style="display:none;">
          <div class="info-item"><span>SIAP TUAI</span><b id="valSiap">0.00</b></div>
          <div class="info-divider"></div>
-         <div class="info-item status-baki"><span>BAKI LUAS</span><b id="valBaki">0.00</b></div>
+         <div class="info-item status-baki"><span>BAKI LUAS</span><b id="valBaki" style="color:var(--danger)">0.00</b></div>
       </div>
 
       <div class="input-group" style="margin-top:20px;">
         <label id="lbl-val-hasil">NILAI (TAN)</label>
         <input type="text" id="val-hasil" class="big-input" placeholder="0.00" inputmode="text" 
-               onfocus="onFocusInput('Hasil')" onblur="onBlurInput('Hasil')" oninput="checkInput('Hasil')">
+               onfocus="onFocusInput('hasil')" onblur="onBlurInput('hasil')" oninput="onInputHandler('hasil')">
       </div>
 
       <div class="btn-group">
-        <button id="btnSimpanHasil" class="btn-primary" onclick="saveData('hasil')" disabled>
-          <i class="material-icons">save</i> SIMPAN DATA
-        </button>
+        <button id="btnSimpanhasil" class="btn-primary" onclick="saveData('hasil')" disabled><i class="material-icons">save</i> SIMPAN DATA</button>
       </div>
 
       <div style="margin-top:25px; border-top:1px dashed #ddd; padding-top:20px;">
-        <button id="btnRefRumusan" class="btn-secondary" onclick="runAdmin('refreshRumusan')" style="display:none; margin-bottom:10px;">
-          <i class="material-icons">sync</i> REFRESH RUMUSAN
-        </button>
-        <button class="btn-success" onclick="runAdmin('saveMaster')">
-          <i class="material-icons">cloud_upload</i> SAVE MASTER (AUTO)
-        </button>
+        <button id="btnRefRumusan" class="btn-secondary" onclick="runAdmin('refreshRumusan')" style="display:none; margin-bottom:10px; width:100%"><i class="material-icons">sync</i> REFRESH RUMUSAN</button>
+        <button class="btn-success" onclick="runAdmin('saveMaster')" style="width:100%"><i class="material-icons">cloud_upload</i> SAVE MASTER (AUTO)</button>
       </div>
-
       <div id="msg-hasil" class="msg-box"></div>
     </div>
   </div>
@@ -255,41 +233,26 @@
   <div id="page-muda" class="page-section">
     <div class="pill">MODE: BTB MUDA</div>
     <div class="card">
-      <div class="input-group">
-        <div class="input-wrapper"><i class="material-icons">calendar_today</i><input type="date" id="date-muda"></div>
-      </div>
+      <div class="input-group"><div class="input-wrapper"><i class="material-icons">calendar_today</i><input type="date" id="date-muda"></div></div>
       
       <div class="input-group">
         <label>PERINGKAT</label>
-        <div class="input-wrapper">
-          <i class="material-icons">layers</i>
-          <select id="sel-pkt-muda" onchange="renderTeamMuda()">
-            <option value="PKT001G">PKT 001G</option>
-            <option value="PKT002">PKT 002</option>
-            <option value="PKT003G">PKT 003G</option>
-            <option value="PKT004A">PKT 004A</option>
-          </select>
-        </div>
+        <div class="input-wrapper"><i class="material-icons">layers</i><select id="sel-pkt-muda" onchange="renderTeamMuda()"><option value="PKT001G">PKT 001G</option><option value="PKT002">PKT 002</option><option value="PKT003G">PKT 003G</option><option value="PKT004A">PKT 004A</option></select></div>
       </div>
 
       <div class="input-group">
         <label>TEAM / BLOK</label>
-        <div class="input-wrapper">
-          <i class="material-icons">groups</i>
-          <select id="sel-team-muda" onchange="clearInput('Muda')"></select>
-        </div>
+        <div class="input-wrapper"><i class="material-icons">groups</i><select id="sel-team-muda" onchange="clearInput('muda')"></select></div>
       </div>
 
       <div class="input-group" style="margin-top:20px;">
         <label>BILANGAN TANDAN</label>
         <input type="text" id="val-muda" class="big-input" placeholder="0" inputmode="text" 
-               onfocus="onFocusInput('Muda')" onblur="onBlurInput('Muda')" oninput="checkInput('Muda')">
+               onfocus="onFocusInput('muda')" onblur="onBlurInput('muda')" oninput="onInputHandler('muda')">
       </div>
 
       <div class="btn-group">
-        <button id="btnSimpanMuda" class="btn-success" onclick="saveData('muda')" disabled>
-          <i class="material-icons">check_circle</i> SIMPAN MUDA
-        </button>
+        <button id="btnSimpanmuda" class="btn-success" onclick="saveData('muda')" disabled><i class="material-icons">check_circle</i> SIMPAN MUDA</button>
       </div>
       <div id="msg-muda" class="msg-box"></div>
     </div>
@@ -300,39 +263,22 @@
     <div class="card">
       <div style="display:flex; gap:10px; margin-bottom:15px;">
         <div class="input-wrapper" style="flex:1"><i class="material-icons">calendar_today</i><input type="date" id="date-penalti"></div>
-        <div class="input-wrapper" style="width:130px">
-          <i class="material-icons">category</i>
-          <select id="type-penalti" onchange="clearInput('Penalti')">
-            <option value="MENGKAL">MENGKAL</option>
-            <option value="LAMA">LAMA</option>
-          </select>
-        </div>
+        <div class="input-wrapper" style="width:130px"><i class="material-icons">category</i><select id="type-penalti" onchange="clearInput('penalti')"><option value="MENGKAL">MENGKAL</option><option value="LAMA">LAMA</option></select></div>
       </div>
 
       <div class="input-group">
         <label>PERINGKAT</label>
-        <div class="input-wrapper">
-          <i class="material-icons">layers</i>
-          <select id="sel-pkt-penalti" onchange="clearInput('Penalti')">
-            <option value="PKT001">PKT 001</option>
-            <option value="PKT001G">PKT 001G</option>
-            <option value="PKT002">PKT 002</option>
-            <option value="PKT003G">PKT 003G</option>
-            <option value="PKT004">PKT 004</option>
-          </select>
-        </div>
+        <div class="input-wrapper"><i class="material-icons">layers</i><select id="sel-pkt-penalti" onchange="clearInput('penalti')"><option value="PKT001">PKT 001</option><option value="PKT001G">PKT 001G</option><option value="PKT002">PKT 002</option><option value="PKT003G">PKT 003G</option><option value="PKT004">PKT 004</option></select></div>
       </div>
 
       <div class="input-group" style="margin-top:20px;">
         <label>BILANGAN TANDAN</label>
         <input type="text" id="val-penalti" class="big-input" placeholder="0" inputmode="text" 
-               onfocus="onFocusInput('Penalti')" onblur="onBlurInput('Penalti')" oninput="checkInput('Penalti')">
+               onfocus="onFocusInput('penalti')" onblur="onBlurInput('penalti')" oninput="onInputHandler('penalti')">
       </div>
 
       <div class="btn-group">
-        <button id="btnSimpanPenalti" class="btn-danger" onclick="saveData('penalti')" disabled>
-          <i class="material-icons">error_outline</i> SIMPAN PENALTI
-        </button>
+        <button id="btnSimpanpenalti" class="btn-danger" onclick="saveData('penalti')" disabled><i class="material-icons">error_outline</i> SIMPAN PENALTI</button>
       </div>
       <div id="msg-penalti" class="msg-box"></div>
     </div>
@@ -341,42 +287,26 @@
   <div id="page-tandan" class="page-section">
     <div class="pill">MODE: REKOD TANDAN</div>
     <div class="card">
-      <div class="input-group">
-        <div class="input-wrapper"><i class="material-icons">calendar_today</i><input type="date" id="date-tandan"></div>
-      </div>
+      <div class="input-group"><div class="input-wrapper"><i class="material-icons">calendar_today</i><input type="date" id="date-tandan"></div></div>
 
       <div class="input-group">
         <label>PERINGKAT</label>
-        <div class="input-wrapper">
-          <i class="material-icons">layers</i>
-          <select id="sel-pkt-tandan" onchange="renderTeamTandan()">
-            <option value="PKT004">PKT 004</option>
-            <option value="PKT001">PKT 001</option>
-            <option value="PKT002">PKT 002</option>
-            <option value="PKT001G">PKT 001G</option>
-            <option value="PKT003G">PKT 003G</option>
-          </select>
-        </div>
+        <div class="input-wrapper"><i class="material-icons">layers</i><select id="sel-pkt-tandan" onchange="renderTeamTandan()"><option value="PKT004">PKT 004</option><option value="PKT001">PKT 001</option><option value="PKT002">PKT 002</option><option value="PKT001G">PKT 001G</option><option value="PKT003G">PKT 003G</option></select></div>
       </div>
 
       <div class="input-group">
         <label>TEAM / BLOK</label>
-        <div class="input-wrapper">
-          <i class="material-icons">groups</i>
-          <select id="sel-team-tandan" onchange="clearInput('Tandan')"></select>
-        </div>
+        <div class="input-wrapper"><i class="material-icons">groups</i><select id="sel-team-tandan" onchange="clearInput('tandan')"></select></div>
       </div>
 
       <div class="input-group" style="margin-top:20px;">
         <label>BILANGAN TANDAN (BIJI)</label>
         <input type="text" id="val-tandan" class="big-input" placeholder="0" inputmode="text" 
-               onfocus="onFocusInput('Tandan')" onblur="onBlurInput('Tandan')" oninput="checkInput('Tandan')">
+               onfocus="onFocusInput('tandan')" onblur="onBlurInput('tandan')" oninput="onInputHandler('tandan')">
       </div>
 
       <div class="btn-group">
-        <button id="btnSimpanTandan" class="btn-warning" onclick="saveData('tandan')" disabled>
-          <i class="material-icons">inventory_2</i> SIMPAN TANDAN
-        </button>
+        <button id="btnSimpantandan" class="btn-warning" onclick="saveData('tandan')" disabled><i class="material-icons">inventory_2</i> SIMPAN TANDAN</button>
       </div>
       <div id="msg-tandan" class="msg-box"></div>
     </div>
@@ -390,15 +320,10 @@
         <button class="btn-secondary" onclick="getReport('PO')">PO</button>
         <button class="btn-secondary" onclick="getReport('RUMUSAN')">RUMUSAN</button>
       </div>
-      <button class="btn-primary" onclick="getReport('ALL')" style="margin-top:15px;">
-        <i class="material-icons">description</i> JANA SEMUA
-      </button>
-
-      <div id="reportResult" class="report-area">
+      <button class="btn-primary" onclick="getReport('ALL')" style="margin-top:15px; width:100%"><i class="material-icons">description</i> JANA SEMUA</button>
+      <div id="reportResult" class="report-area" style="margin-top:15px; display:none;">
         <textarea id="report-out" rows="8" readonly onclick="this.select()"></textarea>
-        <button class="btn-success" onclick="copyText()" style="margin-top:10px;">
-          <i class="material-icons">content_copy</i> SALIN TEKS
-        </button>
+        <button class="btn-success" onclick="copyText()" style="margin-top:10px; width:100%"><i class="material-icons">content_copy</i> SALIN TEKS</button>
       </div>
     </div>
   </div>
@@ -407,55 +332,26 @@
 
 <script>
 // --- CONFIGURATION ---
-const API_URL = "https://script.google.com/macros/s/AKfycbzyOLeaD9WR6uzeNZVxOmKBIAULQEbbyX8K13cPvkbg0nGXYVoLsBmub5sFKn_W0MXl0g/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbzeWWRNk4M2Y5oGTvAJddGIwOwrBEYri9_Ta5zVCzyH3weYf5lUt_60JvfMA2ctsLyYLA/exec"; 
 
 // Data Configs
-const HASIL_CFG = {
-  pkt: ["PKT004","PKT001","PKT002","PKT001G","PKT003G","RUMUSAN"],
-  teams: {
-    PKT004: ["BLOK 1","BLOK 2","BLOK 3","BLOK 4","BLOK 5"],
-    PKT002: ["TEAM PKT","TEAM 1","TEAM 2","TEAM TKA","TEAM TKA BAJA"],
-    PKT001G:["HABIBI","P.BOWO","MEGA","TEAM TKA","TEAM TKA BAJA"],
-    PKT003G:["TEAM KIRI","TEAM KANAN","TEAM BLOK C","TEAM TKA","TEAM TKA BAJA"]
-  }
-};
-
-const MUDA_CFG = {
-  "PKT001G": ["HABIBI", "P.BOWO", "MEGA", "TKA"],
-  "PKT002":  ["TEAM PKT", "TEAM 1", "TEAM 2", "TKA"],
-  "PKT003G": ["KIRI", "KANAN", "BLOK C", "TKA"],
-  "PKT004A": ["BLOK 1", "BLOK 2", "BLOK 3", "BLOK 4", "BLOK 5"]
-};
-
-const TANDAN_CFG = {
-  "PKT004":  ["BLOK 1", "BLOK 2", "BLOK 3", "BLOK 4", "BLOK 5"],
-  "PKT001":  ["TKA"],
-  "PKT002":  ["TEAM PKT", "TEAM 1", "TEAM 2"],
-  "PKT001G": ["HABIBI", "P.BOWO", "MEGA"],
-  "PKT003G": ["KIRI", "KANAN", "BLOK C", "TKA"]
-};
+const HASIL_CFG = { pkt: ["PKT004","PKT001","PKT002","PKT001G","PKT003G","RUMUSAN"], teams: { PKT004: ["BLOK 1","BLOK 2","BLOK 3","BLOK 4","BLOK 5"], PKT002: ["TEAM PKT","TEAM 1","TEAM 2","TEAM TKA","TEAM TKA BAJA"], PKT001G:["HABIBI","P.BOWO","MEGA","TEAM TKA","TEAM TKA BAJA"], PKT003G:["TEAM KIRI","TEAM KANAN","TEAM BLOK C","TEAM TKA","TEAM TKA BAJA"] } };
+const MUDA_CFG = { "PKT001G": ["HABIBI", "P.BOWO", "MEGA", "TKA"], "PKT002": ["TEAM PKT", "TEAM 1", "TEAM 2", "TKA"], "PKT003G": ["KIRI", "KANAN", "BLOK C", "TKA"], "PKT004A": ["BLOK 1", "BLOK 2", "BLOK 3", "BLOK 4", "BLOK 5"] };
+const TANDAN_CFG = { "PKT004": ["BLOK 1", "BLOK 2", "BLOK 3", "BLOK 4", "BLOK 5"], "PKT001": ["TKA"], "PKT002": ["TEAM PKT", "TEAM 1", "TEAM 2"], "PKT001G": ["HABIBI", "P.BOWO", "MEGA"], "PKT003G": ["KIRI", "KANAN", "BLOK C", "TKA"] };
 
 let HARVEST_STATS = null;
-let FORMULA_STORE = { 'Hasil': '', 'Muda': '', 'Penalti': '', 'Tandan': '' };
+let FORMULA_STORE = { hasil: '', muda: '', penalti: '', tandan: '' }; // Key huruf kecil
 
 // --- INIT ---
 window.onload = () => {
   const today = new Date().toISOString().split('T')[0];
   ['date-hasil','date-muda','date-penalti','date-tandan'].forEach(id => document.getElementById(id).value = today);
-
-  renderPeringkatHasil();
-  renderTeamMuda();
-  renderTeamTandan();
-  
+  renderPeringkatHasil(); renderTeamMuda(); renderTeamTandan();
   if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
   fetchStats();
 };
 
-// --- NAVIGATION ---
-function toggleMenu() {
-  document.querySelector('.sidebar').classList.toggle('open');
-  document.querySelector('.overlay').classList.toggle('open');
-}
+function toggleMenu() { document.querySelector('.sidebar').classList.toggle('open'); document.querySelector('.overlay').classList.toggle('open'); }
 function nav(id, el) {
   document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -465,61 +361,130 @@ function nav(id, el) {
 }
 
 // ==========================================
-// SMART INPUT (AUTO CALCULATE & SAVE FORMULA)
+// SMART FORMULA ENGINE (KEY FIX)
 // ==========================================
-function onFocusInput(type) {
-    const el = document.getElementById(`val-${type.toLowerCase()}`);
-    // Show raw formula if exists
-    if (FORMULA_STORE[type]) el.value = FORMULA_STORE[type];
+function onInputHandler(typeRaw) {
+    const type = typeRaw.toLowerCase();
+    const el = document.getElementById(`val-${type}`);
+    const btn = document.getElementById(`btnSimpan${type}`);
+    
+    // 1. Simpan raw formula (contoh: =5+5) ke memory
+    FORMULA_STORE[type] = el.value;
+    
+    // 2. Unlock button kalau ada isi
+    btn.disabled = (el.value.trim() === "");
 }
 
-function onBlurInput(type) {
-    const el = document.getElementById(`val-${type.toLowerCase()}`);
+function onBlurInput(typeRaw) {
+    const type = typeRaw.toLowerCase();
+    const el = document.getElementById(`val-${type}`);
     let val = el.value.trim();
     
-    FORMULA_STORE[type] = val; // Store formula
-    
-    // Auto calculate if contains math symbols
-    if (val.match(/[+\-*\/]/)) {
+    if(!val) { FORMULA_STORE[type] = ""; return; }
+
+    // 3. Auto tambah '=' jika user lupa (tapi ada simbol math)
+    if (val.match(/[+\-*\/]/) && !val.startsWith('=')) {
+        val = "=" + val;
+        FORMULA_STORE[type] = val; // Update memory
+    }
+
+    // 4. Paparkan hasil kiraan di skrin (User nampak 10)
+    // TAPI dalam FORMULA_STORE masih kekal =5+5
+    if (val.startsWith('=')) {
         try {
-            let cleanVal = val.replace('=', '');
-            let result = Function('"use strict";return (' + cleanVal + ')')();
-            if(!isNaN(result)) {
-                el.value = result % 1 !== 0 ? result.toFixed(2) : result;
+            let clean = val.substring(1);
+            let result = Function('"use strict";return (' + clean + ')')();
+            if (!isNaN(result)) {
+                el.value = (result % 1 !== 0) ? result.toFixed(2) : result;
             }
         } catch(e) {}
     }
-    checkInput(type);
 }
 
-function clearInput(type) {
-    const el = document.getElementById('val-' + type.toLowerCase());
-    if(el) {
-        el.value = "";
-        FORMULA_STORE[type] = "";
-        checkInput(type);
+function onFocusInput(typeRaw) {
+    const type = typeRaw.toLowerCase();
+    const el = document.getElementById(`val-${type}`);
+    // 5. Bila user tekan balik, tunjuk formula asal (=5+5) untuk edit
+    if (FORMULA_STORE[type] && FORMULA_STORE[type].startsWith('=')) {
+        el.value = FORMULA_STORE[type];
     }
 }
 
-function checkInput(type) {
-    const val = document.getElementById('val-' + type.toLowerCase()).value;
-    const btn = document.getElementById('btnSimpan' + type);
-    if(btn) btn.disabled = (val.trim() === "");
+function clearInput(typeRaw) {
+    const type = typeRaw.toLowerCase();
+    document.getElementById(`val-${type}`).value = "";
+    FORMULA_STORE[type] = "";
+    document.getElementById(`btnSimpan${type}`).disabled = true;
 }
 
 // ==========================================
-// RENDER UI
+// SAVE HANDLER (FINAL FIX)
+// ==========================================
+async function saveData(typeRaw) {
+  const type = typeRaw.toLowerCase();
+  
+  // 6. AMBIL FORMULA DARI MEMORY, BUKAN DARI SKRIN
+  // Kalau formula kosong (user tak pernah blur/focus), ambil value skrin
+  let valToSend = FORMULA_STORE[type] || document.getElementById(`val-${type}`).value;
+  
+  if(!valToSend) return alert("Sila isi nilai!");
+  
+  // 7. Safety check terakhir sebelum hantar ke Google Sheet
+  if (valToSend.match(/[+\-*\/]/) && !valToSend.startsWith('=')) {
+      valToSend = "=" + valToSend;
+  }
+
+  document.getElementById('loader').style.display = 'flex';
+  
+  let payload = {};
+  if (type === 'hasil') {
+    payload = {
+      peringkat: document.getElementById('sel-pkt-hasil').value,
+      idx: document.getElementById('sel-team-hasil').value,
+      day: Number(document.getElementById('date-hasil').value.split('-')[2]),
+      fullDate: document.getElementById('date-hasil').value
+    };
+    if (document.getElementById('mode-hasil').value === "TAN") { payload.action = "saveTan"; payload.tan = valToSend; } 
+    else { payload.action = "savePusTuai"; payload.tarikh = payload.fullDate; payload.hektar = valToSend; }
+  } 
+  else if (type === 'muda') {
+    payload = { action: "saveMuda", peringkat: document.getElementById('sel-pkt-muda').value, teamName: document.getElementById('sel-team-muda').value, val: valToSend, tarikh: document.getElementById('date-muda').value };
+  }
+  else if (type === 'penalti') {
+    payload = { action: "savePenalti", type: document.getElementById('type-penalti').value, peringkat: document.getElementById('sel-pkt-penalti').value, val: valToSend, tarikh: document.getElementById('date-penalti').value };
+  }
+  else if (type === 'tandan') {
+    payload = { action: "saveTandan", peringkat: document.getElementById('sel-pkt-tandan').value, teamName: document.getElementById('sel-team-tandan').value, val: valToSend, tarikh: document.getElementById('date-tandan').value };
+  }
+
+  try {
+    const req = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: payload.action, data: payload }) });
+    const res = await req.json();
+    document.getElementById('loader').style.display = 'none';
+    
+    if(res.ok) {
+      showMsg(document.getElementById(`msg-${type}`), res.message, true);
+      clearInput(type);
+      if(type === 'hasil' && document.getElementById('mode-hasil').value === "PUS_TUAI") fetchStats();
+    } else {
+      showMsg(document.getElementById(`msg-${type}`), res.message, false);
+    }
+  } catch(e) {
+    document.getElementById('loader').style.display = 'none';
+    alert("Ralat Sambungan Internet!");
+  }
+}
+
+// ==========================================
+// RENDER & UTILS
 // ==========================================
 function renderPeringkatHasil() {
-  const mode = document.getElementById('mode-hasil').value;
   const sel = document.getElementById('sel-pkt-hasil');
+  const mode = document.getElementById('mode-hasil').value;
   const list = (mode === "PUS_TUAI") ? HASIL_CFG.pkt.filter(x => x !== "RUMUSAN") : HASIL_CFG.pkt;
-  
   sel.innerHTML = list.map(x => `<option>${x}</option>`).join("");
   document.getElementById('lbl-val-hasil').textContent = (mode==="TAN") ? "NILAI (TAN)" : "NILAI (HEKTAR)";
-  
   renderTeamHasil();
-  clearInput('Hasil'); 
 }
 
 function renderTeamHasil() {
@@ -527,32 +492,22 @@ function renderTeamHasil() {
   const wrap = document.getElementById('wrap-team-hasil');
   const sel = document.getElementById('sel-team-hasil');
   const mode = document.getElementById('mode-hasil').value;
+  
+  const isRumusan = (p === "RUMUSAN");
+  document.getElementById('btnRefRumusan').style.display = isRumusan ? 'block' : 'none';
+  document.getElementById('btnSimpanhasil').style.display = isRumusan ? 'none' : 'flex';
+  wrap.style.display = (isRumusan || p === "PKT001") ? 'none' : 'block';
+  
+  const inp = document.getElementById('val-hasil');
+  inp.disabled = isRumusan;
+  inp.placeholder = isRumusan ? "Tekan Refresh" : "0.00";
+  if(isRumusan) inp.value = ""; 
 
   const info = document.getElementById('info-luas');
   const box = document.getElementById('box-status-tuai');
-  
-  const btnRefRumusan = document.getElementById('btnRefRumusan');
-  const btnSimpan = document.getElementById('btnSimpanHasil');
-  const inpVal = document.getElementById('val-hasil');
-
-  if(p === "RUMUSAN") {
-      btnRefRumusan.style.display = "flex"; 
-      wrap.style.display = 'none'; 
-      inpVal.disabled = true;
-      inpVal.placeholder = "Tekan Refresh 🔄";
-      btnSimpan.style.display = "none";
-  } else {
-      btnRefRumusan.style.display = "none";
-      inpVal.disabled = false;
-      inpVal.placeholder = "0.00";
-      btnSimpan.style.display = "flex";
-      checkInput('Hasil');
-      if(p !== "PKT001") wrap.style.display = 'block'; else wrap.style.display = 'none';
-  }
-
   if(HARVEST_STATS && HARVEST_STATS[p]) {
      info.textContent = `• ${HARVEST_STATS[p].luas.toFixed(2)} Ha`;
-     if(mode === "PUS_TUAI" && p !== "RUMUSAN") {
+     if(mode === "PUS_TUAI" && !isRumusan) {
         box.style.display = 'flex';
         document.getElementById('valSiap').textContent = HARVEST_STATS[p].siap.toFixed(2) + " Ha";
         const d = Number(document.getElementById('date-hasil').value.split('-')[2]);
@@ -560,134 +515,52 @@ function renderTeamHasil() {
         if(d >= 16 || HARVEST_STATS[p].siap > HARVEST_STATS[p].luas) target *= 2;
         document.getElementById('valBaki').textContent = (target - HARVEST_STATS[p].siap).toFixed(2) + " Ha";
      } else box.style.display = 'none';
-  } else {
-     info.textContent = ""; box.style.display = 'none';
-  }
+  } else { info.textContent = ""; box.style.display = 'none'; }
 
-  if(p !== "RUMUSAN" && p !== "PKT001") {
-    document.getElementById('lbl-team-hasil').textContent = (p==="PKT004") ? "BLOK" : "TEAM";
-    const teams = HASIL_CFG.teams[p] || ["1","2","3","4","5"];
-    sel.innerHTML = teams.map((t,i) => `<option value="${i}">${t}</option>`).join("");
+  if(!isRumusan && p!=="PKT001") {
+    sel.innerHTML = (HASIL_CFG.teams[p] || []).map((t,i) => `<option value="${i}">${t}</option>`).join("");
   }
+  clearInput('hasil');
 }
 
 function renderTeamMuda() {
   const p = document.getElementById('sel-pkt-muda').value;
-  const sel = document.getElementById('sel-team-muda');
-  sel.innerHTML = (MUDA_CFG[p] || []).map(t => `<option value="${t}">${t}</option>`).join("");
-  clearInput('Muda');
+  document.getElementById('sel-team-muda').innerHTML = (MUDA_CFG[p]||[]).map(t => `<option value="${t}">${t}</option>`).join("");
+  clearInput('muda');
 }
-
 function renderTeamTandan() {
   const p = document.getElementById('sel-pkt-tandan').value;
-  const sel = document.getElementById('sel-team-tandan');
-  sel.innerHTML = (TANDAN_CFG[p] || []).map(t => `<option value="${t}">${t}</option>`).join("");
-  clearInput('Tandan');
+  document.getElementById('sel-team-tandan').innerHTML = (TANDAN_CFG[p]||[]).map(t => `<option value="${t}">${t}</option>`).join("");
+  clearInput('tandan');
 }
 
-// --- SAVE HANDLER ---
-async function saveData(type) {
-  let action, payload = {};
-  let msgEl = document.getElementById(`msg-${type.toLowerCase()}`); 
-  document.getElementById('loader').style.display = 'flex';
-
-  let valToSend = FORMULA_STORE[type] || document.getElementById(`val-${type.toLowerCase()}`).value;
-  
-  if(!valToSend.trim() && type !== 'hasil') { 
-      alert("Isi nilai!"); document.getElementById('loader').style.display='none'; return; 
-  }
-
-  if (valToSend.match(/[+\-*\/]/) && !valToSend.trim().startsWith('=')) {
-      valToSend = "=" + valToSend;
-  }
-
-  if (type === 'hasil') {
-    const mode = document.getElementById('mode-hasil').value;
-    payload = {
-      peringkat: document.getElementById('sel-pkt-hasil').value,
-      idx: document.getElementById('sel-team-hasil').value,
-      day: Number(document.getElementById('date-hasil').value.split('-')[2]),
-      fullDate: document.getElementById('date-hasil').value
-    };
-    if (mode === "TAN") { action = "saveTan"; payload.tan = valToSend; } 
-    else { action = "savePusTuai"; payload.tarikh = payload.fullDate; payload.hektar = valToSend; }
-  } 
-  else if (type === 'muda') {
-    action = "saveMuda";
-    payload = {
-      peringkat: document.getElementById('sel-pkt-muda').value,
-      teamName: document.getElementById('sel-team-muda').value,
-      val: valToSend,
-      tarikh: document.getElementById('date-muda').value
-    };
-  } 
-  else if (type === 'penalti') {
-    action = "savePenalti";
-    payload = {
-      type: document.getElementById('type-penalti').value,
-      peringkat: document.getElementById('sel-pkt-penalti').value,
-      val: valToSend,
-      tarikh: document.getElementById('date-penalti').value
-    };
-  }
-  else if (type === 'tandan') {
-    action = "saveTandan";
-    payload = {
-      peringkat: document.getElementById('sel-pkt-tandan').value,
-      teamName: document.getElementById('sel-team-tandan').value,
-      val: valToSend,
-      tarikh: document.getElementById('date-tandan').value
-    };
-  }
-
-  try {
-    const req = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action, data: payload }) });
-    const res = await req.json();
-    document.getElementById('loader').style.display = 'none';
-    if(res.ok) {
-      showMsg(msgEl, res.message, true);
-      clearInput(type);
-      if(type==='hasil' && document.getElementById('mode-hasil').value==="PUS_TUAI") fetchStats();
-    } else showMsg(msgEl, res.message, false);
-  } catch(e) {
-    document.getElementById('loader').style.display = 'none';
-    showMsg(msgEl, "Ralat Sambungan!", false);
-  }
-}
-
-// --- HELPERS ---
 async function fetchStats() {
   try {
-    const req = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: 'getHarvestStatus', data: {} }) });
-    const res = await req.json();
+    const r = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: 'getHarvestStatus', data: {} }) });
+    const res = await r.json();
     if(res.ok) { HARVEST_STATS = res.stats; renderTeamHasil(); }
   } catch(e){}
 }
 
 async function runAdmin(act) {
-  if(act !== 'refreshRumusan' && !confirm("Anda pasti?")) return;
+  if(act !== 'refreshRumusan' && !confirm("Pasti?")) return;
   document.getElementById('loader').style.display = 'flex';
   const d = document.getElementById('date-hasil').value;
-  const p = document.getElementById('sel-pkt-hasil').value;
-  
   try {
-      const req = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: act, data: { peringkat: p, fullDate: d, day: Number(d.split('-')[2]) } }) });
-      const res = await req.json();
+      const r = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: act, data: { peringkat: document.getElementById('sel-pkt-hasil').value, fullDate: d, day: Number(d.split('-')[2]) } }) });
+      const res = await r.json();
       document.getElementById('loader').style.display = 'none';
       if(res.ok) {
           if(act === 'refreshRumusan' && res.tan) document.getElementById('val-hasil').value = Number(res.tan).toFixed(2);
-          showMsg(document.getElementById('msg-hasil'), res.message || "Selesai", true);
-      } else alert("Gagal: " + res.message);
-  } catch(e) {
-      document.getElementById('loader').style.display = 'none';
-      alert("Error Sambungan.");
-  }
+          alert(res.message);
+      } else alert(res.message);
+  } catch(e){ document.getElementById('loader').style.display = 'none'; alert("Error"); }
 }
 
 async function getReport(t) {
   document.getElementById('loader').style.display = 'flex';
-  const req = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: 'genReport', data: t }) });
-  const res = await req.json();
+  const r = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: 'genReport', data: t }) });
+  const res = await r.json();
   document.getElementById('loader').style.display = 'none';
   if(res.ok) {
     document.getElementById('report-out').value = res.reportText;
@@ -696,16 +569,12 @@ async function getReport(t) {
 }
 
 function copyText() {
-  const t = document.getElementById('report-out');
-  t.select(); document.execCommand('copy');
-  alert("Teks Disalin!");
+  const t = document.getElementById('report-out'); t.select(); document.execCommand('copy'); alert("Disalin!");
 }
 
 function showMsg(el, txt, success) {
-  el.textContent = txt;
-  el.className = "msg-box " + (success ? "msg-success" : "msg-error");
-  el.style.display = "block";
-  setTimeout(()=>el.style.display="none", 3000);
+  el.textContent = txt; el.className = "msg-box " + (success ? "msg-success" : "msg-error");
+  el.style.display = "block"; setTimeout(()=>el.style.display="none", 3000);
 }
 </script>
 </body>
