@@ -10,24 +10,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
   <title>e-HASIL FPMSB TENANG</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
   <style>
     :root {
       --bg-color: #f4f6f8; --card-bg: #ffffff; --text-main: #333333; --text-label: #555555;
       --border-color: #cccccc; --input-bg: #ffffff;
-      --btn-blue: #007bff; --btn-green: #28a745; --btn-gray: #6c757d; --btn-purple: #6f42c1;
+      --btn-blue: #007bff; --btn-green: #28a745; --btn-gray: #6c757d; --btn-purple: #6f42c1; --btn-red: #dc3545; --btn-orange: #fd7e14;
     }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    
+    /* HIDE SCROLLBAR (Request #2) */
+    ::-webkit-scrollbar { display: none; }
+    * { -ms-overflow-style: none;  scrollbar-width: none; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     
     body { 
       font-family: 'Roboto', sans-serif; 
       padding: 15px; background-color: var(--bg-color); color: var(--text-main); 
       margin: 0; min-height: 100vh; overscroll-behavior: none;
-      display: flex; justify-content: center; 
+      display: flex; justify-content: center; padding-top: 70px;
     }
 
     .app-container { width: 100%; max-width: 480px; background: var(--bg-color); min-height: 100vh; position: relative; }
 
-    .header h3 { margin: 10px 0 20px 0; font-size: 20px; font-weight: 700; text-align: center; color: #000; text-transform: uppercase; }
+    /* HEADER & SIDEBAR */
+    .header {
+      position: fixed; top: 0; left: 0; width: 100%; height: 60px; background: var(--btn-blue); color: white;
+      display: flex; align-items: center; padding: 0 15px; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .menu-btn { font-size: 28px; cursor: pointer; margin-right: 15px; }
+    .header h3 { font-size: 18px; font-weight: 700; margin: 0; flex-grow: 1; }
+    
+    .sidebar {
+      position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: white; z-index: 1100;
+      transition: 0.3s; box-shadow: 2px 0 5px rgba(0,0,0,0.2); display: flex; flex-direction: column;
+    }
+    .sidebar.open { left: 0; }
+    .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1050; display: none; }
+    .overlay.open { display: block; }
+    
+    .sb-header { height: 150px; background: var(--btn-blue); color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .sb-menu { flex-grow: 1; padding: 10px 0; overflow-y: auto; }
+    .sb-item { padding: 15px 20px; display: flex; align-items: center; cursor: pointer; border-bottom: 1px solid #eee; color: #555; font-weight: 500; }
+    .sb-item i { margin-right: 15px; color: #777; }
+    .sb-item.active { background: #e3f2fd; color: var(--btn-blue); font-weight: bold; }
+    .sb-item.active i { color: var(--btn-blue); }
+
+    /* CONTENT STYLES */
     .pill { display: block; width: fit-content; margin: 0 auto 20px auto; padding: 4px 12px; border-radius: 4px; background-color: #e2e6ea; color: #333; border: 1px solid #ccc; font-size: 11px; font-weight: bold; letter-spacing: 1px; }
     
     .card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -38,25 +66,15 @@
 
     select, input, textarea { width: 100%; padding: 12px; background-color: var(--input-bg); border: 1px solid var(--border-color); border-radius: 4px; font-size: 16px; color: #000; outline: none; font-family: 'Roboto', sans-serif; appearance: none; -webkit-appearance: none; }
     select:focus, input:focus { border-color: var(--btn-blue); background-color: #fff; }
+    
+    /* Disabled Input Style */
+    input:disabled { background-color: #e9ecef; color: #6c757d; cursor: not-allowed; border-color: #dee2e6; }
 
-    /* CSS UPDATE: Info Status & Divider */
-    .info-status { 
-        background-color: #d4edda; 
-        border: 1px solid #c3e6cb; 
-        border-radius: 4px; 
-        padding: 10px; 
-        margin: 15px 0; 
-        display: none; /* Default Hidden */
-        justify-content: space-between; 
-        align-items: center; 
-        font-size: 12px; 
-        color: #155724; 
-    }
+    /* STATUS BOX */
+    .info-status { background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: 4px; padding: 10px; margin: 15px 0; display: none; justify-content: space-between; align-items: center; font-size: 12px; color: #155724; }
     .info-item { text-align: center; width: 45%; }
     .info-item b { display: block; font-size: 15px; margin-top: 2px; color: #000; }
-    
     .info-divider { width: 1px; height: 35px; background-color: #9ccca6; opacity: 0.6; }
-
     .status-baki.done b { color: #28a745; } .status-baki b { color: #dc3545; }
 
     #nilai { font-size: 24px; font-weight: bold; text-align: center; color: #000; background-color: #fff; border: 2px solid #ccc; }
@@ -76,6 +94,8 @@
     .btn-success { background-color: var(--btn-green); }
     .btn-secondary { background-color: var(--btn-gray); color: #fff; }
     .btn-special { background-color: var(--btn-purple); }
+    .btn-red { background-color: var(--btn-red); }
+    .btn-orange { background-color: var(--btn-orange); }
 
     .divider { display: flex; align-items: center; justify-content: center; margin: 25px 0 15px 0; position: relative; }
     .divider::before { content: ''; position: absolute; width: 100%; height: 1px; background-color: var(--border-color); }
@@ -89,386 +109,465 @@
     .report-area { margin-top: 15px; display: none; }
     textarea { font-family: monospace; font-size: 12px; background-color: #eee; color: #333; border: 1px solid #ccc; width:100%; }
     
-    #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); display: flex; justify-content: center; align-items: center; z-index: 999; display: none; }
+    /* PAGES */
+    .page-section { display: none; }
+    .page-section.active { display: block; animation: fadein 0.3s; }
+    @keyframes fadein { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+    /* LOADER */
+    #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); display: flex; justify-content: center; align-items: center; z-index: 2000; display: none; }
     .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--btn-blue); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    
-    .mini-loader { position: absolute; top: 15px; right: 15px; width: 24px; height: 24px; border: 3px solid #ccc; border-top: 3px solid var(--btn-blue); border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
-    .reload-icon { position: absolute; top: 15px; right: 15px; width: 36px; height: 36px; background: #e2e6ea; border-radius: 4px; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 100; touch-action: manipulation; }
   </style>
 </head>
 <body>
 
-<div class="app-container">
-  <div id="loader"><div class="spinner"></div></div>
-  <div class="mini-loader" id="syncIcon"></div>
+<div id="loader"><div class="spinner"></div></div>
 
-  <div class="reload-icon" id="btnRefresh" onclick="onRefresh()" title="Refresh Data">
-    <svg viewBox="0 0 24 24" width="18" height="18" fill="#555"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+<div class="header">
+  <i class="material-icons menu-btn" onclick="toggleMenu()">menu</i>
+  <h3>FPMSB TENANG</h3>
+  <div style="width:10px; height:10px; background:#00e676; border-radius:50%;" id="syncDot"></div>
+</div>
+
+<div class="overlay" onclick="toggleMenu()"></div>
+<div class="sidebar">
+  <div class="sb-header">
+    <i class="material-icons" style="font-size:48px; margin-bottom:10px;">spa</i>
+    <div style="font-weight:bold;">SISTEM LADANG</div>
   </div>
-
-  <div class="header">
-    <h3>e-HASIL FPMSB TENANG</h3>
-    <div class="pill" id="modeTag">MODE: TAN</div>
-  </div>
-
-  <div class="card">
-    <label>Pilih Mode</label>
-    <select id="mode" onchange="onModeChange()">
-      <option value="TAN">📊 Input TAN Harian</option>
-      <option value="PUS_TUAI">🚜 Input Hektar Tuai</option>
-    </select>
-
-    <label>Peringkat <span id="luasDisplay"></span></label>
-    <select id="peringkat" onchange="onPeringkatChange()"></select>
-
-    <div id="pickWrap" style="display:none;">
-      <label id="pickTitle">BLOK / TEAM</label>
-      <select id="pick"></select>
-    </div>
-
-    <div id="statusBox" class="info-status">
-       <div class="info-item status-siap">SIAP TUAI <b id="valSiap">0.00 Ha</b></div>
-       <div class="info-divider"></div>
-       <div class="info-item status-baki">BAKI <b id="valBaki">0.00 Ha</b></div>
-    </div>
-
-    <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px;">
-      <div>
-        <label>Tarikh</label>
-        <input id="tarikh" type="date" onchange="onPeringkatChange()" />
-      </div>
-      <div>
-        <label id="nilaiLabel">TAN</label>
-        <input id="nilai" type="text" inputmode="text" placeholder="Contoh: =5.5+5.5" 
-               onfocus="onFocusInput()" onblur="onBlurInput()" oninput="checkInput()" />
-      </div>
-    </div>
-
-    <div class="btn-group">
-      <button id="btnSimpan" class="btn-primary" onclick="onSave()" disabled>SIMPAN DATA</button>
-    </div>
-    
-    <div id="msg" class="msg-box msg-info"></div>
-  </div>
-
-  <div class="divider"><span class="sec-title">ADMIN PANEL</span></div>
-
-  <div class="card">
-    <div id="tanActions">
-      <button class="btn-success" onclick="onSaveDataMaster()" style="margin-bottom:12px;">📤 Simpan ke MASTER</button>
-      
-      <button id="btnRefRumusan" class="btn-secondary" onclick="onRefreshRumusan()" style="margin-bottom:12px; display:none;">🔄 Refresh Rumusan Sahaja</button>
-    </div>
-
-    <label style="justify-content:center; opacity:0.7; margin-bottom:12px;">JANA LAPORAN WHATSAPP</label>
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-      <button class="btn-secondary" onclick="onGenReport('PO')">📄 PO</button>
-      <button class="btn-secondary" onclick="onGenReport('RUMUSAN')">📄 RUMUSAN</button>
-    </div>
-    <button class="btn-special" onclick="onGenReport('ALL')" style="margin-top:12px;">📑 JANA SEMUA LAPORAN</button>
-
-    <div id="reportResult" class="report-area">
-        <label>Hasil Laporan:</label>
-        <textarea id="reportText" rows="10" readonly onclick="this.select()"></textarea>
-        <button class="btn-success" onclick="copyReport()" style="margin-top:12px;">📋 COPY TEKS</button>
-    </div>
+  <div class="sb-menu">
+    <div class="sb-item active" onclick="nav('page-hasil', this)"><i class="material-icons">bar_chart</i>INPUT HASIL (TAN)</div>
+    <div class="sb-item" onclick="nav('page-muda', this)"><i class="material-icons">eco</i>BTB MUDA</div>
+    <div class="sb-item" onclick="nav('page-penalti', this)"><i class="material-icons">warning</i>PENALTI TANDAN</div>
+    <div class="sb-item" onclick="nav('page-tandan', this)"><i class="material-icons">inventory_2</i>REKOD TANDAN</div>
+    <div class="sb-item" onclick="nav('page-admin', this)"><i class="material-icons">admin_panel_settings</i>ADMIN & LAPORAN</div>
   </div>
 </div>
 
-<script>
-  // ==========================================
-  // CONFIGURATION
-  // ==========================================
-  // ⚠️ Guna URL API Anda ⚠️
-  const API_URL = "https://script.google.com/macros/s/AKfycbxcKhdoPFHh3HKnbJjBXe1eMuEQlYroo8uwpzHd-EhvJ6vBfyi2vMjxlnPAdjOIYuDDhQ/exec"; 
-  // ==========================================
+<div class="app-container">
 
-  // --- HARDCODED CONFIG (RAHSIA INSTANT LOAD) ---
-  const STATIC_CFG = {
-    peringkat: ["PKT004", "PKT001", "PKT002", "PKT001G", "PKT003G", "RUMUSAN"],
-    labels: {
-      PKT004: ["BLOK 1", "BLOK 2", "BLOK 3", "BLOK 4", "BLOK 5"],
-      PKT002: ["TEAM PKT", "TEAM 1", "TEAM 2", "TEAM TKA", "TEAM TKA BAJA"],
-      PKT001G: ["HABIBI", "P.BOWO", "MEGA", "TEAM TKA", "TEAM TKA BAJA"],
-      PKT003G: ["TEAM KIRI", "TEAM KANAN", "TEAM BLOK C", "TEAM TKA", "TEAM TKA BAJA"]
-    }
-  };
+  <div id="page-hasil" class="page-section active">
+    <div class="pill">MODE: HASIL</div>
+    <div class="card">
+      <div style="margin-bottom:15px; display:flex; gap:10px;">
+        <input type="date" id="date-hasil" style="flex:1" onchange="renderPeringkatHasil()">
+        <select id="mode-hasil" style="width:110px" onchange="renderPeringkatHasil()">
+          <option value="TAN">TAN</option>
+          <option value="PUS_TUAI">HEKTAR</option>
+        </select>
+      </div>
 
-  let HARVEST_STATS = null; // Ini je kita fetch dari server
-  let STORED_FORMULA = "";
-  let IS_SHOWING_RESULT = false;
+      <label>PERINGKAT <span id="info-luas" style="float:right; color:green;"></span></label>
+      <select id="sel-pkt-hasil" onchange="renderTeamHasil()"></select>
 
-  async function runApi(action, data = {}, bg = false) {
-    if(!bg) document.getElementById('loader').style.display = 'flex';
-    else {
-        document.getElementById('syncIcon').style.display = 'block';
-        document.getElementById('btnRefresh').style.display = 'none';
-    }
+      <div id="wrap-team-hasil" style="margin-top:15px;">
+        <label id="lbl-team-hasil">TEAM / BLOK</label>
+        <select id="sel-team-hasil"></select>
+      </div>
 
-    try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        body: JSON.stringify({ action: action, data: data })
-      });
-      const result = await response.json();
+      <div id="box-status-tuai" class="info-status">
+         <div class="info-item">SIAP <b id="valSiap">0.00</b></div>
+         <div class="info-divider"></div>
+         <div class="info-item">BAKI <b id="valBaki" style="color:#dc3545">0.00</b></div>
+      </div>
+
+      <div style="margin-top:15px;">
+        <label id="lbl-val-hasil">NILAI (TAN)</label>
+        <input type="text" id="val-hasil" placeholder="Contoh: =5.5+2.2" inputmode="decimal" style="font-size:24px; text-align:center; font-weight:bold;">
+      </div>
+
+      <div class="btn-group">
+        <button id="btnSimpanHasil" class="btn-primary" onclick="saveData('hasil')">SIMPAN DATA</button>
+      </div>
       
-      if(!bg) document.getElementById('loader').style.display = 'none';
-      else {
-          document.getElementById('syncIcon').style.display = 'none';
-          document.getElementById('btnRefresh').style.display = 'flex';
-      }
-      return result;
-    } catch (e) {
-      if(!bg) document.getElementById('loader').style.display = 'none';
-      else {
-          document.getElementById('syncIcon').style.display = 'none';
-          document.getElementById('btnRefresh').style.display = 'flex';
-      }
-      setMsg("❌ Ralat Sambungan. Sila refresh.", "error");
-      return { ok: false };
-    }
-  }
-
-  function setMsg(t, type="info"){ 
-    const m = document.getElementById('msg');
-    m.textContent = t || ""; 
-    m.className = "msg-box msg-" + (t.includes("✅") ? "success" : t.includes("❌") ? "error" : "info");
-    m.style.display = t ? "block" : "none";
-  }
-  
-  function todayISO() { const d=new Date(); return d.toISOString().split('T')[0]; }
-  function getDay() { const v=document.getElementById('tarikh').value; return v ? Number(v.split('-')[2]) : null; }
-  
-  // --- SAFETY LOCK ---
-  function checkInput() {
-    const val = document.getElementById('nilai').value.trim();
-    document.getElementById('btnSimpan').disabled = (val === "");
-  }
-
-  // --- SMART INPUT ---
-  function onFocusInput() {
-    const el = document.getElementById('nilai');
-    IS_SHOWING_RESULT = false;
-    if (STORED_FORMULA) el.value = STORED_FORMULA;
-  }
-
-  function onBlurInput() {
-    const el = document.getElementById('nilai');
-    let val = el.value.trim();
-    checkInput();
-    if (!val) { STORED_FORMULA = ""; IS_SHOWING_RESULT = false; return; }
-    val = val.replace(/,/g, '.');
-    STORED_FORMULA = val;
-    if (val.match(/[+\-*\/]/)) {
-        try {
-            let cleanVal = val.replace('=', '');
-            let total = 0;
-            if (cleanVal.includes('+')) { cleanVal.split('+').forEach(p => { let n = parseFloat(p); if(!isNaN(n)) total += n; }); } 
-            else { total = parseFloat(cleanVal); }
-            el.value = total.toFixed(2); IS_SHOWING_RESULT = true; 
-        } catch(e) {}
-    } else {
-        let n = parseFloat(val);
-        if(!isNaN(n)) { el.value = n.toFixed(2); STORED_FORMULA = n.toString(); IS_SHOWING_RESULT = true; }
-    }
-  }
-
-  function getMode(){ return document.getElementById('mode').value; }
-  
-  // --- RENDER UI (Guna Static Data = Laju) ---
-  function renderPeringkatOptions(){
-    const sel = document.getElementById('peringkat');
-    const currentVal = sel.value;
-    const list = (getMode() === "PUS_TUAI") ? STATIC_CFG.peringkat.filter(x => x !== "RUMUSAN") : STATIC_CFG.peringkat;
-    
-    sel.innerHTML = list.map(x => `<option>${x}</option>`).join("");
-    if(currentVal && list.includes(currentVal)) sel.value = currentVal;
-    else sel.selectedIndex = 0;
-    
-    onPeringkatChange(); // Trigger perubahan UI
-  }
-
-  function onModeChange(){
-    const mode = getMode();
-    document.getElementById('modeTag').textContent = "MODE: " + (mode==="TAN"?"TAN":"PUS. TUAI");
-    document.getElementById('nilaiLabel').textContent = mode === "TAN" ? "TAN" : "HEKTAR";
-    document.getElementById('tanActions').style.display = (mode === "TAN") ? "block" : "none";
-    
-    document.getElementById('nilai').value = ""; 
-    STORED_FORMULA = ""; 
-    IS_SHOWING_RESULT = false;
-    checkInput();
-
-    renderPeringkatOptions();
-    setMsg("");
-  }
-
-  function onPeringkatChange(){
-    const p = document.getElementById('peringkat').value;
-    const mode = getMode();
-    const wrap = document.getElementById('pickWrap');
-    
-    // Auto Clear & Safety Check
-    document.getElementById('nilai').value = ""; 
-    STORED_FORMULA = ""; 
-    IS_SHOWING_RESULT = false;
-    checkInput();
-
-    // Logic Dropdown Blok/Team (Guna Static Data)
-    if (mode !== "TAN" || p === "PKT001" || p === "RUMUSAN") wrap.style.display = "none";
-    else {
-      wrap.style.display = "block";
-      document.getElementById('pickTitle').textContent = (p === "PKT004") ? "PILIH BLOK" : "PILIH TEAM";
-      const labels = STATIC_CFG.labels[p] || ["1","2","3","4","5"];
-      document.getElementById('pick').innerHTML = labels.map((t,i) => `<option value="${i}">${t}</option>`).join("");
-    }
-
-    // --- LOGIK BUTTON REFRESH RUMUSAN ---
-    const btnRefRumusan = document.getElementById('btnRefRumusan');
-    if(btnRefRumusan) btnRefRumusan.style.display = (p === "RUMUSAN") ? "block" : "none";
-    // ------------------------------------------
-
-    // --- LOGIK STATUS BOX & SMART CYCLE ---
-    const luasLabel = document.getElementById('luasDisplay');
-    const statusBox = document.getElementById('statusBox');
-    
-    // 1. Tunjuk luas jika data ada
-    if (HARVEST_STATS && HARVEST_STATS[p]) {
-        const data = HARVEST_STATS[p];
-        luasLabel.textContent = `• ${data.luas.toFixed(2)} Ha`;
+      <div style="margin-top:20px; border-top:1px solid #eee; padding-top:15px;">
+        <button id="btnRefRumusan" class="btn-secondary" onclick="runAdmin('refreshRumusan')" style="width:100%; display:none; margin-bottom:10px;">🔄 REFRESH RUMUSAN</button>
         
-        // 2. Jika Mode Input Hektar -> Papar & Kira
-        if (mode === "PUS_TUAI") {
-            statusBox.style.display = "flex"; // PAPARKAN
-            
-            const inputDate = document.getElementById('tarikh').value;
-            const day = Number(inputDate.split('-')[2]);
-            
-            let targetHektar = data.luas;
-            // Pusingan Pintar (16hb ke atas ATAU siap awal)
-            if (day >= 16 || data.siap > data.luas) {
-                targetHektar = data.luas * 2;
-            }
+        <button id="btnSaveMaster" class="btn-success" onclick="runAdmin('saveMaster')" style="width:100%;">📥 SAVE MASTER (BULAN INI)</button>
+      </div>
 
-            const baki = targetHektar - data.siap;
+      <div id="msg-hasil" class="msg-box"></div>
+    </div>
+  </div>
 
-            document.getElementById('valSiap').textContent = data.siap.toFixed(2) + " Ha";
-            document.getElementById('valBaki').textContent = baki.toFixed(2) + " Ha";
-            
-            const bakiEl = document.querySelector('.status-baki');
-            if (baki <= 0.1) bakiEl.classList.add('done'); else bakiEl.classList.remove('done');
-        } else {
-            statusBox.style.display = "none"; // Mode TAN -> SOROK
-        }
-    } else {
-        // Jika data belum load
-        luasLabel.textContent = ""; 
-        statusBox.style.display = "none";
-    }
+  <div id="page-muda" class="page-section">
+    <div class="pill">MODE: BTB MUDA</div>
+    <div class="card">
+      <div style="margin-bottom:15px;"><input type="date" id="date-muda"></div>
+      
+      <label>PERINGKAT (MUDA)</label>
+      <select id="sel-pkt-muda" onchange="renderTeamMuda()">
+        <option value="PKT001G">PKT 001G</option>
+        <option value="PKT002">PKT 002</option>
+        <option value="PKT003G">PKT 003G</option>
+        <option value="PKT004A">PKT 004A</option>
+      </select>
+
+      <div style="margin-top:15px;">
+        <label>TEAM / BLOK</label>
+        <select id="sel-team-muda"></select>
+      </div>
+
+      <div style="margin-top:15px;">
+        <label>BILANGAN TANDAN</label>
+        <input type="number" id="val-muda" placeholder="0" style="font-size:24px; text-align:center; font-weight:bold;">
+      </div>
+
+      <div class="btn-group">
+        <button class="btn-green" onclick="saveData('muda')">SIMPAN BTB MUDA</button>
+      </div>
+      <div id="msg-muda" class="msg-box"></div>
+    </div>
+  </div>
+
+  <div id="page-penalti" class="page-section">
+    <div class="pill">MODE: PENALTI</div>
+    <div class="card">
+      <div style="margin-bottom:15px; display:flex; gap:10px;">
+        <input type="date" id="date-penalti" style="flex:1">
+        <select id="type-penalti" style="width:130px">
+          <option value="MENGKAL">MENGKAL</option>
+          <option value="LAMA">LAMA</option>
+        </select>
+      </div>
+
+      <label>PERINGKAT</label>
+      <select id="sel-pkt-penalti">
+        <option value="PKT001">PKT 001</option>
+        <option value="PKT001G">PKT 001G</option>
+        <option value="PKT002">PKT 002</option>
+        <option value="PKT003G">PKT 003G</option>
+        <option value="PKT004">PKT 004</option>
+      </select>
+
+      <div style="margin-top:15px;">
+        <label>BILANGAN TANDAN</label>
+        <input type="number" id="val-penalti" placeholder="0" style="font-size:24px; text-align:center; font-weight:bold;">
+      </div>
+
+      <div class="btn-group">
+        <button class="btn-red" onclick="saveData('penalti')">SIMPAN PENALTI</button>
+      </div>
+      <div id="msg-penalti" class="msg-box"></div>
+    </div>
+  </div>
+
+  <div id="page-tandan" class="page-section">
+    <div class="pill">MODE: REKOD TANDAN</div>
+    <div class="card">
+      <div style="margin-bottom:15px;"><input type="date" id="date-tandan"></div>
+
+      <label>PERINGKAT</label>
+      <select id="sel-pkt-tandan" onchange="renderTeamTandan()">
+        <option value="PKT004">PKT 004</option>
+        <option value="PKT001">PKT 001</option>
+        <option value="PKT002">PKT 002</option>
+        <option value="PKT001G">PKT 001G</option>
+        <option value="PKT003G">PKT 003G</option>
+      </select>
+
+      <div style="margin-top:15px;">
+        <label>TEAM / BLOK</label>
+        <select id="sel-team-tandan"></select>
+      </div>
+
+      <div style="margin-top:15px;">
+        <label>BILANGAN TANDAN (BIJI)</label>
+        <input type="number" id="val-tandan" placeholder="0" style="font-size:24px; text-align:center; font-weight:bold;">
+      </div>
+
+      <div class="btn-group">
+        <button class="btn-orange" onclick="saveData('tandan')">SIMPAN TANDAN</button>
+      </div>
+      <div id="msg-tandan" class="msg-box"></div>
+    </div>
+  </div>
+
+  <div id="page-admin" class="page-section">
+    <div class="pill">LAPORAN</div>
+    <div class="card">
+      <div class="divider"><span class="sec-title">JANA LAPORAN</span></div>
+      
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <button class="btn-primary" onclick="getReport('PO')">PO</button>
+        <button class="btn-primary" onclick="getReport('RUMUSAN')">RUMUSAN</button>
+      </div>
+      <button class="btn-special" onclick="getReport('ALL')" style="width:100%; margin-top:10px;">JANA SEMUA LAPORAN</button>
+
+      <div id="reportResult" class="report-area">
+        <textarea id="report-out" rows="8" readonly onclick="this.select()"></textarea>
+        <button class="btn-secondary" onclick="copyText()" style="width:100%; margin-top:10px;">📋 COPY TEKS</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// --- CONFIGURATION ---
+const API_URL = "https://script.google.com/macros/s/AKfycbzKWkhwivohmFHHbtCzCkTO-QRj8S5JolC48_jYRKwQQBKgzovSpYflw2IRMLg6h4YheQ/exec"; 
+
+// Data Configs
+const HASIL_CFG = {
+  pkt: ["PKT004","PKT001","PKT002","PKT001G","PKT003G","RUMUSAN"],
+  teams: {
+    PKT004: ["BLOK 1","BLOK 2","BLOK 3","BLOK 4","BLOK 5"],
+    PKT002: ["TEAM PKT","TEAM 1","TEAM 2","TEAM TKA","TEAM TKA BAJA"],
+    PKT001G:["HABIBI","P.BOWO","MEGA","TEAM TKA","TEAM TKA BAJA"],
+    PKT003G:["TEAM KIRI","TEAM KANAN","TEAM BLOK C","TEAM TKA","TEAM TKA BAJA"]
   }
+};
 
-  // --- ACTIONS ---
-  async function onRefresh(isBackground = false){
-    // Kita cuma fetch BAKI/LUAS sahaja. Config UI dah hardcoded.
-    const res = await runApi('getHarvestStatus', {}, isBackground);
-    if(res && res.ok) { 
-        HARVEST_STATS = res.stats;
-        onPeringkatChange(); // Update numbers
-        if(!isBackground) setMsg("✅ DATA DIKEMASKINI", "success");
-    }
-  }
+const MUDA_CFG = {
+  "PKT001G": ["HABIBI", "P.BOWO", "MEGA", "TKA"],
+  "PKT002":  ["TEAM PKT", "TEAM 1", "TEAM 2", "TKA"],
+  "PKT003G": ["KIRI", "KANAN", "BLOK C", "TKA"],
+  "PKT004A": ["BLOK 1", "BLOK 2", "BLOK 3", "BLOK 4", "BLOK 5"]
+};
 
-  function getPayload(forLoad=false){
-    let valToSend = "";
-    if (!forLoad) {
-        if (IS_SHOWING_RESULT && STORED_FORMULA) valToSend = STORED_FORMULA;
-        else valToSend = document.getElementById('nilai').value;
-        if (typeof valToSend === 'string' && valToSend.match(/[+\-*\/]/) && !valToSend.trim().startsWith('=')) valToSend = '=' + valToSend;
-    }
-    
-    const base = {
-        peringkat: document.getElementById('peringkat').value,
-        idx: document.getElementById('pickWrap').style.display!=="none" ? document.getElementById('pick').value : "",
-        day: getDay(),
-        fullDate: document.getElementById('tarikh').value
-    };
+const TANDAN_CFG = {
+  "PKT004":  ["BLOK 1", "BLOK 2", "BLOK 3", "BLOK 4", "BLOK 5"],
+  "PKT001":  ["TKA"],
+  "PKT002":  ["TEAM PKT", "TEAM 1", "TEAM 2"],
+  "PKT001G": ["HABIBI", "P.BOWO", "MEGA"],
+  "PKT003G": ["KIRI", "KANAN", "BLOK C", "TKA"]
+};
 
-    if(getMode() === "TAN") base.tan = forLoad ? 0 : valToSend;
-    else { base.tarikh = base.fullDate; base.hektar = forLoad ? 0 : valToSend; }
-    return base;
-  }
+let HARVEST_STATS = null;
 
-  async function onSave(){
-    if (document.activeElement === document.getElementById('nilai')) onBlurInput();
-    const val = document.getElementById('nilai').value;
-    if(!val) { setMsg("⚠️ Sila isi nilai!", "error"); return; }
+// --- INIT ---
+window.onload = () => {
+  const today = new Date().toISOString().split('T')[0];
+  ['date-hasil','date-muda','date-penalti','date-tandan'].forEach(id => document.getElementById(id).value = today);
 
-    const mode = getMode();
-    const action = mode === "TAN" ? 'saveTan' : 'savePusTuai';
-    const res = await runApi(action, getPayload(false));
-    if(res.ok) { setMsg(res.message || "✅ BERJAYA DISIMPAN!", "success"); onRefresh(true); } 
-    else { setMsg(res.message || "Ralat", "error"); }
-  }
-
-  // SECURITY PATCH: HANTAR TARIKH KE SAVE MASTER
-  async function onSaveDataMaster(){
-    const payload = {
-        peringkat: document.getElementById('peringkat').value,
-        fullDate: document.getElementById('tarikh').value // Penting!
-    };
-    const res = await runApi('saveMaster', payload);
-    setMsg(res.message || (res.ok ? "✅ Saved" : "❌ Error"), res.ok ? "success" : "error");
-  }
-
-  async function onRefreshRumusan(){
-    if(document.getElementById('peringkat').value !== "RUMUSAN") { setMsg("❌ PILIH RUMUSAN DAHULU", "error"); return; }
-    const res = await runApi('refreshRumusan', { day: getDay() });
-    if(res.ok) {
-        if(res.tan) {
-            let n = Number(res.tan);
-            document.getElementById('nilai').value = n.toFixed(2);
-            STORED_FORMULA = String(n); IS_SHOWING_RESULT = true;
-            checkInput();
-        }
-        setMsg("✅ SELESAI", "success");
-    } else setMsg(res.message, "error");
-  }
-
-  async function onGenReport(type){
-    document.getElementById('reportResult').style.display = 'none';
-    const res = await runApi('genReport', type);
-    if(res.ok && res.reportText) {
-        document.getElementById('reportText').value = res.reportText;
-        document.getElementById('reportResult').style.display = 'block';
-        setMsg("✅ LAPORAN DIJANA", "success");
-    } else setMsg(res.message || "Ralat", "error");
-  }
-
-  function copyReport() { 
-    const textArea = document.getElementById("reportText"); 
-    textArea.select(); textArea.setSelectionRange(0, 99999); 
-    try { document.execCommand('copy'); setMsg("✅ DISALIN!", "success"); } catch (err) { setMsg("❌ Salin manual", "error"); } 
-  }
-
-  // --- PWA SERVICE WORKER REGISTRATION (PATCHED) ---
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js')
-        .then(reg => console.log('✅ Service Worker Registered'))
-        .catch(err => console.log('❌ SW Fail:', err));
-    });
-  }
-
-  // INITIALIZE (Instant Load)
-  document.getElementById('tarikh').value = todayISO();
-  renderPeringkatOptions(); // Terus render sebab config dah ada
-  checkInput(); 
+  renderPeringkatHasil();
+  renderTeamMuda();
+  renderTeamTandan();
   
-  // Background Fetch (Cari data baki)
-  onRefresh(true);
+  // PWA Service Worker
+  if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 
+  // Background Fetch Stats
+  fetchStats();
+};
+
+// --- NAVIGATION ---
+function toggleMenu() {
+  document.querySelector('.sidebar').classList.toggle('open');
+  document.querySelector('.overlay').classList.toggle('open');
+}
+function nav(id, el) {
+  document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+  if(el) el.classList.add('active');
+  toggleMenu();
+}
+
+// --- RENDER FUNCTIONS ---
+function renderPeringkatHasil() {
+  const mode = document.getElementById('mode-hasil').value;
+  const sel = document.getElementById('sel-pkt-hasil');
+  const list = (mode === "PUS_TUAI") ? HASIL_CFG.pkt.filter(x => x !== "RUMUSAN") : HASIL_CFG.pkt;
+  sel.innerHTML = list.map(x => `<option>${x}</option>`).join("");
+  document.getElementById('lbl-val-hasil').textContent = (mode==="TAN") ? "NILAI (TAN)" : "NILAI (HEKTAR)";
+  renderTeamHasil();
+}
+
+function renderTeamHasil() {
+  const p = document.getElementById('sel-pkt-hasil').value;
+  const wrap = document.getElementById('wrap-team-hasil');
+  const sel = document.getElementById('sel-team-hasil');
+  const mode = document.getElementById('mode-hasil').value;
+
+  const info = document.getElementById('info-luas');
+  const box = document.getElementById('box-status-tuai');
+  
+  // ELEMENTS UNTUK LOGIK RUMUSAN
+  const btnRefRumusan = document.getElementById('btnRefRumusan');
+  const btnSimpan = document.getElementById('btnSimpanHasil');
+  const inpVal = document.getElementById('val-hasil');
+
+  // 1. LOGIK BUTTON & INPUT RUMUSAN
+  if(p === "RUMUSAN") {
+      btnRefRumusan.style.display = "block"; // Tunjuk button Refresh
+      wrap.style.display = 'none'; // Sembunyi Team (Rumusan tiada team)
+      
+      // Request #1: Lock Input & Hide Save Button
+      inpVal.disabled = true;
+      inpVal.style.backgroundColor = "#e9ecef";
+      inpVal.placeholder = "Tekan Refresh 🔄";
+      btnSimpan.style.display = "none";
+  } else {
+      // Revert ke asal
+      btnRefRumusan.style.display = "none";
+      inpVal.disabled = false;
+      inpVal.style.backgroundColor = "#fff";
+      inpVal.placeholder = "Contoh: =5.5+2.2";
+      btnSimpan.style.display = "block";
+
+      if(p !== "PKT001") wrap.style.display = 'block'; else wrap.style.display = 'none'; // PKT001 tiada team
+  }
+
+  // 2. LOGIK STATUS BOX
+  if(HARVEST_STATS && HARVEST_STATS[p]) {
+     info.textContent = `• ${HARVEST_STATS[p].luas.toFixed(2)} Ha`;
+     if(mode === "PUS_TUAI" && p !== "RUMUSAN") {
+        box.style.display = 'flex';
+        document.getElementById('valSiap').textContent = HARVEST_STATS[p].siap.toFixed(2);
+        const d = Number(document.getElementById('date-hasil').value.split('-')[2]);
+        let target = HARVEST_STATS[p].luas;
+        if(d >= 16 || HARVEST_STATS[p].siap > HARVEST_STATS[p].luas) target *= 2;
+        document.getElementById('valBaki').textContent = (target - HARVEST_STATS[p].siap).toFixed(2);
+     } else box.style.display = 'none';
+  } else {
+     info.textContent = ""; box.style.display = 'none';
+  }
+
+  // 3. DROPDOWN TEAM FILL
+  if(p !== "RUMUSAN" && p !== "PKT001") {
+    document.getElementById('lbl-team-hasil').textContent = (p==="PKT004") ? "BLOK" : "TEAM";
+    const teams = HASIL_CFG.teams[p] || ["1","2","3","4","5"];
+    sel.innerHTML = teams.map((t,i) => `<option value="${i}">${t}</option>`).join("");
+  }
+}
+
+function renderTeamMuda() {
+  const p = document.getElementById('sel-pkt-muda').value;
+  const sel = document.getElementById('sel-team-muda');
+  sel.innerHTML = (MUDA_CFG[p] || []).map(t => `<option value="${t}">${t}</option>`).join("");
+}
+
+function renderTeamTandan() {
+  const p = document.getElementById('sel-pkt-tandan').value;
+  const sel = document.getElementById('sel-team-tandan');
+  sel.innerHTML = (TANDAN_CFG[p] || []).map(t => `<option value="${t}">${t}</option>`).join("");
+}
+
+// --- SAVE HANDLER ---
+async function saveData(type) {
+  let action, payload = {};
+  let msgEl = document.getElementById(`msg-${type}`);
+  document.getElementById('loader').style.display = 'flex';
+
+  if (type === 'hasil') {
+    const mode = document.getElementById('mode-hasil').value;
+    const val = document.getElementById('val-hasil').value;
+    if(!val) { alert("Isi nilai!"); document.getElementById('loader').style.display='none'; return; }
+    let fVal = (val.match(/[+\-*\/]/) && !val.startsWith('=')) ? "=" + val : val;
+    payload = {
+      peringkat: document.getElementById('sel-pkt-hasil').value,
+      idx: document.getElementById('sel-team-hasil').value,
+      day: Number(document.getElementById('date-hasil').value.split('-')[2]),
+      fullDate: document.getElementById('date-hasil').value
+    };
+    if (mode === "TAN") { action = "saveTan"; payload.tan = fVal; } 
+    else { action = "savePusTuai"; payload.tarikh = payload.fullDate; payload.hektar = fVal; }
+  } 
+  else if (type === 'muda') {
+    action = "saveMuda";
+    payload = {
+      peringkat: document.getElementById('sel-pkt-muda').value,
+      teamName: document.getElementById('sel-team-muda').value,
+      val: document.getElementById('val-muda').value,
+      tarikh: document.getElementById('date-muda').value
+    };
+  } 
+  else if (type === 'penalti') {
+    action = "savePenalti";
+    payload = {
+      type: document.getElementById('type-penalti').value,
+      peringkat: document.getElementById('sel-pkt-penalti').value,
+      val: document.getElementById('val-penalti').value,
+      tarikh: document.getElementById('date-penalti').value
+    };
+  }
+  else if (type === 'tandan') {
+    action = "saveTandan";
+    payload = {
+      peringkat: document.getElementById('sel-pkt-tandan').value,
+      teamName: document.getElementById('sel-team-tandan').value,
+      val: document.getElementById('val-tandan').value,
+      tarikh: document.getElementById('date-tandan').value
+    };
+  }
+
+  if(!payload.val && type !== 'hasil') { alert("Isi nilai!"); document.getElementById('loader').style.display='none'; return; }
+
+  try {
+    const req = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action, data: payload }) });
+    const res = await req.json();
+    document.getElementById('loader').style.display = 'none';
+    if(res.ok) {
+      showMsg(msgEl, res.message, true);
+      document.getElementById(`val-${type}`).value = "";
+      if(type==='hasil' && document.getElementById('mode-hasil').value==="PUS_TUAI") fetchStats();
+    } else showMsg(msgEl, res.message, false);
+  } catch(e) {
+    document.getElementById('loader').style.display = 'none';
+    showMsg(msgEl, "Ralat Sambungan!", false);
+  }
+}
+
+// --- HELPERS ---
+async function fetchStats() {
+  try {
+    const req = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: 'getHarvestStatus', data: {} }) });
+    const res = await req.json();
+    if(res.ok) { HARVEST_STATS = res.stats; renderTeamHasil(); }
+  } catch(e){}
+}
+
+async function runAdmin(act) {
+  if(act !== 'refreshRumusan' && !confirm("Anda pasti?")) return;
+  
+  document.getElementById('loader').style.display = 'flex';
+  const d = document.getElementById('date-hasil').value;
+  const p = document.getElementById('sel-pkt-hasil').value;
+  
+  try {
+      const req = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: act, data: { peringkat: p, fullDate: d, day: Number(d.split('-')[2]) } }) });
+      const res = await req.json();
+      document.getElementById('loader').style.display = 'none';
+      
+      if(res.ok) {
+          if(act === 'refreshRumusan' && res.tan) {
+              document.getElementById('val-hasil').value = Number(res.tan).toFixed(2);
+          }
+          alert(res.message || "Selesai.");
+      } else {
+          alert("Gagal: " + res.message);
+      }
+  } catch(e) {
+      document.getElementById('loader').style.display = 'none';
+      alert("Error Sambungan.");
+  }
+}
+
+async function getReport(t) {
+  document.getElementById('loader').style.display = 'flex';
+  const req = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: 'genReport', data: t }) });
+  const res = await req.json();
+  document.getElementById('loader').style.display = 'none';
+  if(res.ok) {
+    document.getElementById('report-out').value = res.reportText;
+    document.getElementById('reportResult').style.display = 'block';
+  }
+}
+
+function copyText() {
+  const t = document.getElementById('report-out');
+  t.select(); document.execCommand('copy');
+  alert("Teks Disalin!");
+}
+
+function showMsg(el, txt, success) {
+  el.textContent = txt;
+  el.className = "msg-box " + (success ? "msg-success" : "msg-error");
+  el.style.display = "block";
+  setTimeout(()=>el.style.display="none", 3000);
+}
 </script>
 </body>
-
 </html>
