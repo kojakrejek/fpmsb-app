@@ -45,7 +45,6 @@
     }
     .menu-btn { font-size: 28px; cursor: pointer; margin-right: 15px; }
     .header h3 { font-size: 18px; font-weight: 600; margin: 0; flex-grow: 1; letter-spacing: 0.5px; }
-    .sync-dot { width: 10px; height: 10px; background: #50e3c2; border-radius: 50%; box-shadow: 0 0 5px #50e3c2; }
 
     .sidebar {
       position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
@@ -62,85 +61,48 @@
       justify-content: center; align-items: center; 
     }
     .sb-logo-text { font-size: 18px; font-weight: 700; margin-top: 10px; letter-spacing: 1px; }
-    
     .sb-menu { flex-grow: 1; padding: 15px 0; overflow-y: auto; }
-    .sb-item { 
-      padding: 15px 25px; display: flex; align-items: center; 
-      color: #555; font-weight: 500; transition: 0.2s; border-left: 4px solid transparent;
-    }
-    .sb-item i { margin-right: 15px; color: #999; font-size: 22px; }
+    .sb-item { padding: 15px 25px; display: flex; align-items: center; color: #555; font-weight: 500; transition: 0.2s; border-left: 4px solid transparent; cursor: pointer; }
     .sb-item.active { background: #f0f7ff; color: var(--primary); border-left-color: var(--primary); }
+    .sb-item i { margin-right: 15px; color: #999; font-size: 22px; }
     .sb-item.active i { color: var(--primary); }
 
-    .card { 
-      background: var(--bg-card); border-radius: var(--radius); 
-      padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); 
-      border: 1px solid rgba(0,0,0,0.03);
-    }
-    
-    .pill { 
-      background: #eef2f7; color: #555; padding: 6px 15px; 
-      border-radius: 20px; font-size: 11px; font-weight: 700; 
-      letter-spacing: 1px; width: fit-content; margin: 0 auto 15px auto; 
-      text-transform: uppercase; display: block;
-    }
-
+    .card { background: var(--bg-card); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.03); }
+    .pill { background: #eef2f7; color: #555; padding: 6px 15px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 1px; width: fit-content; margin: 0 auto 15px auto; text-transform: uppercase; display: block; }
     .input-group { margin-bottom: 15px; }
     label { display: block; font-size: 12px; font-weight: 600; color: #7f8c8d; margin-bottom: 6px; text-transform: uppercase; }
     .input-wrapper { position: relative; }
     .input-wrapper i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #bdc3c7; }
     
-    select, input, textarea { 
-      width: 100%; padding: 12px 15px 12px 40px; 
-      border: 2px solid #ecf0f1; border-radius: 10px; 
-      font-size: 15px; font-family: 'Poppins', sans-serif; color: #333;
-      transition: 0.3s; background: #fff; appearance: none;
-    }
+    select, input, textarea { width: 100%; padding: 12px 15px 12px 40px; border: 2px solid #ecf0f1; border-radius: 10px; font-size: 15px; font-family: 'Poppins', sans-serif; transition: 0.3s; background: #fff; appearance: none; }
     select:focus, input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1); }
-    
-    .big-input { 
-      font-size: 24px !important; font-weight: 700; text-align: center; 
-      padding-left: 15px !important; color: var(--primary);
-    }
+    .big-input { font-size: 24px !important; font-weight: 700; text-align: center; padding-left: 15px !important; color: var(--primary); }
 
-    button { 
-      width: 100%; padding: 14px; border: none; border-radius: 10px; 
-      font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 14px; 
-      text-transform: uppercase; cursor: pointer; 
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
+    button { width: 100%; padding: 14px; border: none; border-radius: 10px; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 14px; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
     button:active { transform: scale(0.98); }
-    
     .btn-success { background: linear-gradient(135deg, #2ecc71, #27ae60); color: white; }
     .btn-secondary { background: #fff; border: 2px solid #ecf0f1; color: #555; box-shadow: none; }
     .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
     .btn-warning { background: linear-gradient(135deg, #f1c40f, #f39c12); color: #fff; }
 
-    .info-status { 
-      background: #e8f8f5; border: 1px solid #d1f2eb; border-radius: 10px; 
-      padding: 12px; margin: 20px 0; display: flex; justify-content: space-between; 
-      align-items: center;
-    }
-    .info-item { text-align: center; width: 45%; }
-    .info-item span { font-size: 11px; color: #16a085; font-weight: 600; }
-    .info-item b { display: block; font-size: 16px; color: #0e6655; margin-top: 2px; }
-    .info-divider { width: 1px; height: 30px; background: #d1f2eb; }
+    .bulk-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; padding: 10px; background: #f8f9fa; border-radius: 8px; }
+    .bulk-row label { flex: 1; margin: 0; color: #333; font-size: 13px; }
+    .bulk-row input { flex: 1; padding: 8px; padding-left: 10px; text-align: right; }
 
+    /* --- TOAST & LOADER --- */
     #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; display: none; backdrop-filter: blur(5px); }
     .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 0.8s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
+    #toast-box { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(120px); min-width: 300px; padding: 15px 20px; background: #333; color: #fff; border-radius: 12px; display: flex; align-items: center; gap: 12px; z-index: 3000; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    #toast-box.show { transform: translateX(-50%) translateY(0); }
+    #toast-box.warning { background: #f39c12; }
+    #toast-box.success { background: #2ecc71; }
+    #toast-box.error { background: #e74c3c; }
+
     .page-section { display: none; animation: slideUp 0.3s ease-out; }
     .page-section.active { display: block; }
     @keyframes slideUp { from { opacity:0; transform:translateY(15px); } to { opacity:1; transform:translateY(0); } }
-
-    .bulk-row {
-      display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
-      padding: 10px; background: #f8f9fa; border-radius: 8px;
-    }
-    .bulk-row label { flex: 1; margin: 0; color: #333; font-size: 13px; }
-    .bulk-row input { flex: 1; padding: 8px; padding-left: 10px; text-align: right; }
   </style>
 </head>
 <body>
@@ -150,10 +112,14 @@
   <div style="margin-top:15px; font-size:12px; font-weight:600; color:#555;">SILA TUNGGU...</div>
 </div>
 
+<div id="toast-box">
+  <i class="material-icons" id="toast-icon">notifications</i>
+  <span id="toast-msg">Notifikasi</span>
+</div>
+
 <div class="header">
   <i class="material-icons menu-btn" onclick="toggleMenu()">menu</i>
   <h3>e-HASIL TENANG</h3>
-  <div class="sync-dot" id="syncDot"></div>
 </div>
 
 <div class="overlay" onclick="toggleMenu()"></div>
@@ -182,17 +148,17 @@
       </div>
 
       <div class="input-group">
-        <label>PERINGKAT <span id="info-luas" style="float:right; color:var(--success);"></span></label>
+        <label>PERINGKAT</label>
         <div class="input-wrapper"><i class="material-icons">layers</i><select id="sel-pkt-hasil" onchange="renderTeamHasil()"></select></div>
       </div>
 
-      <div id="wrap-team-hasil" style="margin-top:15px;"></div>
-
-      <div id="wrap-rumusan-display" class="card" style="display:none; background:#fff8e1; border:1px solid #ffe082; text-align:center; margin-top:15px;">
-        <label style="color:#f57f17;">JUMLAH TAN KESELURUHAN (HARI INI)</label>
-        <div id="display-tan-rumusan" style="font-size:32px; font-weight:800; color:#e65100;">0.00</div>
-        <small style="color:#8d6e63;">Sila tekan 'SAVE MASTER' untuk simpan nilai ini.</small>
+      <div id="wrap-live-display" class="card" style="background:#fff8e1; border:1px solid #ffe082; text-align:center; margin-top:15px; display:none;">
+        <label id="lbl-display" style="color:#f57f17;">JUMLAH TAN (HARI INI)</label>
+        <div id="display-tan-live" style="font-size:32px; font-weight:800; color:#e65100;">0.00</div>
+        <small id="small-hint" style="color:#8d6e63;">Sila tekan 'SAVE MASTER' untuk simpan.</small>
       </div>
+
+      <div id="wrap-team-hasil" style="margin-top:15px;"></div>
 
       <div id="box-status-tuai" class="info-status" style="display:none;">
          <div class="info-item"><span>SIAP TUAI</span><b id="valSiap">0.00</b></div>
@@ -202,17 +168,13 @@
 
       <div id="wrap-single-hasil" class="input-group" style="margin-top:20px; display:none;">
         <label id="lbl-val-hasil">NILAI</label>
-        <input type="text" id="val-hasil" class="big-input" placeholder="0.00" inputmode="text"
-               onfocus="onFocusInput(this,'hasil')" onblur="onBlurInput(this,'hasil')" oninput="onInputHandler(this,'hasil')">
+        <input type="text" id="val-hasil" class="big-input" placeholder="0.00" inputmode="text" onfocus="onFocusInput(this,'hasil')" onblur="onBlurInput(this,'hasil')" oninput="onInputHandler(this,'hasil')">
       </div>
 
       <div style="margin-top:25px; border-top:1px dashed #ddd; padding-top:20px;">
         <button id="btnRefRumusan" class="btn-secondary" onclick="runAdmin('refreshRumusan')" style="display:none; margin-bottom:10px; width:100%"><i class="material-icons">sync</i> REFRESH RUMUSAN</button>
-        <button class="btn-success" onclick="processSaveMaster()" style="width:100%">
-          <i class="material-icons">cloud_upload</i> SAVE MASTER
-        </button>
+        <button class="btn-success" onclick="processSaveMaster()" style="width:100%"><i class="material-icons">cloud_upload</i> SAVE MASTER</button>
       </div>
-      <div id="msg-hasil" class="msg-box"></div>
     </div>
   </div>
 
@@ -244,8 +206,7 @@
       </div>
       <div class="input-group" style="margin-top:20px;">
         <label>BILANGAN TANDAN</label>
-        <input type="text" id="val-penalti" class="big-input" placeholder="0" inputmode="text"
-               onfocus="onFocusInput(this,'penalti')" onblur="onBlurInput(this,'penalti')" oninput="onInputHandler(this,'penalti')">
+        <input type="text" id="val-penalti" class="big-input" placeholder="0" inputmode="text" onfocus="onFocusInput(this,'penalti')" onblur="onBlurInput(this,'penalti')" oninput="onInputHandler(this,'penalti')">
       </div>
       <div class="btn-group">
         <button class="btn-danger" onclick="saveData('penalti')"><i class="material-icons">error_outline</i> SIMPAN PENALTI</button>
@@ -287,14 +248,14 @@
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbzTE4jOpxIS3BJPrUhInTeoaJOLLEnMnRLN1adIIUBYfHrynJARZATNacvcCli38KXUBg/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbzTOAkyzF3PAApmfxuRAFz1V5cy3IDUKH3ULNlybNctxI2DNpXSdLR3RS8rTARPDT4eUQ/exec"; 
 
 const HASIL_CFG = { pkt: ["PKT004","PKT001","PKT002","PKT001G","PKT003G","RUMUSAN"], teams: { PKT004: ["BLOK 1","BLOK 2","BLOK 3","BLOK 4","BLOK 5"], PKT002: ["TEAM PKT","TEAM 1","TEAM 2","TEAM TKA","TEAM TKA BAJA"], PKT001G:["HABIBI","P.BOWO","MEGA","TEAM TKA","TEAM TKA BAJA"], PKT003G:["TEAM KIRI","TEAM KANAN","TEAM BLOK C","TEAM TKA","TEAM TKA BAJA"] } };
 const MUDA_CFG = { "PKT001G": ["HABIBI", "P.BOWO", "MEGA", "TKA"], "PKT002": ["TEAM PKT", "TEAM 1", "TEAM 2", "TKA"], "PKT003G": ["KIRI", "KANAN", "BLOK C", "TKA"], "PKT004A": ["BLOK 1", "BLOK 2", "BLOK 3", "BLOK 4", "BLOK 5"] };
 const TANDAN_CFG = { "PKT004": ["BLOK 1", "BLOK 2", "BLOK 3", "BLOK 4", "BLOK 5"], "PKT001": ["TKA"], "PKT002": ["TEAM PKT", "TEAM 1", "TEAM 2"], "PKT001G": ["HABIBI", "P.BOWO", "MEGA"], "PKT003G": ["KIRI", "KANAN", "BLOK C", "TKA"] };
 
-let HARVEST_STATS = null;
 let FORMULA_STORE = {}; 
+let HARVEST_STATS = null;
 
 window.onload = () => {
   const today = new Date().toISOString().split('T')[0];
@@ -312,12 +273,47 @@ function nav(id, el) {
   toggleMenu();
 }
 
+// --- CUSTOM TOAST ---
+function showToast(msg, type = 'success') {
+  const toast = document.getElementById('toast-box');
+  const icon = document.getElementById('toast-icon');
+  document.getElementById('toast-msg').textContent = msg;
+  
+  toast.className = 'show ' + type;
+  if(type === 'success') icon.textContent = 'check_circle';
+  else if(type === 'warning') icon.textContent = 'report_problem';
+  else icon.textContent = 'error';
+
+  setTimeout(() => { toast.classList.remove('show'); }, 3500);
+}
+
 // ==========================================
-// SMART FORMULA ENGINE (FOR BULK & SINGLE)
+// SMART FORMULA ENGINE & LIVE TOTAL
 // ==========================================
+function updateLiveTotal() {
+  const p = document.getElementById('sel-pkt-hasil').value;
+  const mode = document.getElementById('mode-hasil').value;
+  if (p === "RUMUSAN" || mode !== "TAN") return;
+
+  let total = 0;
+  document.querySelectorAll('.bulk-hasil').forEach(inp => {
+    let raw = inp.value.trim();
+    if(raw.startsWith('=')) {
+      try {
+        let clean = raw.substring(1);
+        total += Function('"use strict";return (' + clean + ')')() || 0;
+      } catch(e) {}
+    } else {
+      total += parseFloat(raw) || 0;
+    }
+  });
+  document.getElementById('display-tan-live').textContent = total.toFixed(2);
+}
+
 function onInputHandler(el, type) {
   const key = type + (el.dataset.idx !== undefined ? el.dataset.idx : (el.dataset.team || ""));
   FORMULA_STORE[key] = el.value;
+  if(type === 'hasil') updateLiveTotal();
 }
 
 function onBlurInput(el, type) {
@@ -334,8 +330,9 @@ function onBlurInput(el, type) {
     try {
       let result = Function('"use strict";return (' + val.substring(1) + ')')();
       if (!isNaN(result)) el.value = (result % 1 !== 0) ? result.toFixed(2) : result;
-    } catch(e) { console.error("Kiraan ralat", e); }
+    } catch(e) {}
   }
+  if(type === 'hasil') updateLiveTotal();
 }
 
 function onFocusInput(el, type) {
@@ -358,21 +355,22 @@ function renderTeamHasil() {
   const mode = document.getElementById('mode-hasil').value;
   const wrap = document.getElementById('wrap-team-hasil');
   const wrapSingle = document.getElementById('wrap-single-hasil');
-  const wrapRumusan = document.getElementById('wrap-rumusan-display');
+  const wrapLive = document.getElementById('wrap-live-display');
   
   if(p === "RUMUSAN") {
-    alert("📢 NOTA: Sila klik 'REFRESH RUMUSAN' dahulu!");
+    showToast("Sila klik 'REFRESH RUMUSAN' dahulu!", 'warning');
     document.getElementById('btnRefRumusan').style.display = 'block';
-    wrap.innerHTML = ""; wrapSingle.style.display = 'none';
-    wrapRumusan.style.display = 'block';
-    document.getElementById('display-tan-rumusan').textContent = "0.00";
+    document.getElementById('lbl-display').textContent = "JUMLAH TAN KESELURUHAN";
+    wrap.innerHTML = ""; wrapSingle.style.display = 'none'; wrapLive.style.display = 'block';
+    document.getElementById('display-tan-live').textContent = "0.00";
     return;
   }
+  
   document.getElementById('btnRefRumusan').style.display = 'none';
-  wrapRumusan.style.display = 'none';
+  document.getElementById('lbl-display').textContent = "JUMLAH TAN (HARI INI)";
 
   if(mode === "TAN") {
-    wrapSingle.style.display = 'none';
+    wrapSingle.style.display = 'none'; wrapLive.style.display = 'block';
     let teams = (p === "PKT001") ? ["TOTAL"] : (HASIL_CFG.teams[p] || []);
     let html = `<label>MASUKKAN TAN PER TEAM (${p})</label>`;
     teams.forEach((t, i) => {
@@ -380,12 +378,12 @@ function renderTeamHasil() {
                 <label>${t}</label>
                 <input type="text" class="bulk-hasil" data-idx="${i}" placeholder="0.00" 
                        onfocus="onFocusInput(this,'hasil')" onblur="onBlurInput(this,'hasil')" oninput="onInputHandler(this,'hasil')">
-               </div>`;
+              </div>`;
     });
     wrap.innerHTML = html;
+    updateLiveTotal();
   } else {
-    wrap.innerHTML = ""; wrapSingle.style.display = 'block';
-    document.getElementById('lbl-val-hasil').textContent = "NILAI HEKTAR : " + p;
+    wrap.innerHTML = ""; wrapSingle.style.display = 'block'; wrapLive.style.display = 'none';
   }
   updateStatsDisplay(p);
 }
@@ -399,7 +397,7 @@ function renderTeamMuda() {
               <label>${t}</label>
               <input type="text" class="bulk-muda" data-team="${t}" placeholder="0" 
                      onfocus="onFocusInput(this,'muda')" onblur="onBlurInput(this,'muda')" oninput="onInputHandler(this,'muda')">
-             </div>`;
+            </div>`;
   });
   wrap.innerHTML = html;
 }
@@ -413,46 +411,41 @@ function renderTeamTandan() {
               <label>${t}</label>
               <input type="text" class="bulk-tandan" data-team="${t}" placeholder="0" 
                      onfocus="onFocusInput(this,'tandan')" onblur="onBlurInput(this,'tandan')" oninput="onInputHandler(this,'tandan')">
-             </div>`;
+            </div>`;
   });
   wrap.innerHTML = html;
 }
 
 function updateStatsDisplay(p) {
   const box = document.getElementById('box-status-tuai');
-  const info = document.getElementById('info-luas');
-  if(HARVEST_STATS && HARVEST_STATS[p]) {
-    info.textContent = `• ${HARVEST_STATS[p].luas.toFixed(2)} Ha`;
-    if(document.getElementById('mode-hasil').value === "PUS_TUAI") {
+  if(HARVEST_STATS && HARVEST_STATS[p] && document.getElementById('mode-hasil').value === "PUS_TUAI") {
       box.style.display = 'flex';
       document.getElementById('valSiap').textContent = HARVEST_STATS[p].siap.toFixed(2);
       document.getElementById('valBaki').textContent = (HARVEST_STATS[p].luas - HARVEST_STATS[p].siap).toFixed(2);
-    } else box.style.display = 'none';
-  } else { info.textContent = ""; box.style.display = 'none'; }
+  } else box.style.display = 'none';
 }
 
 // --- SAVE LOGIC ---
 
 async function processSaveMaster() {
   const loader = document.getElementById('loader');
-  const fullDate = document.getElementById(`date-hasil`).value;
+  const d = document.getElementById(`date-hasil`).value;
   const pkt = document.getElementById(`sel-pkt-hasil`).value;
   const mode = document.getElementById('mode-hasil').value;
   
-  let payload = { peringkat: pkt, tarikh: fullDate, day: Number(fullDate.split('-')[2]) };
-  let action = "";
+  let payload = { peringkat: pkt, tarikh: d, day: Number(d.split('-')[2]) };
+  let action = (mode === "TAN") ? "saveTanBulk" : "savePusTuai";
 
   if(mode === "TAN") {
-    action = "saveTanBulk"; payload.list = [];
+    payload.list = [];
     document.querySelectorAll('.bulk-hasil').forEach(inp => {
       let val = FORMULA_STORE['hasil' + inp.dataset.idx] || inp.value;
       if(val.trim() !== "" && val.trim() !== "0") payload.list.push({ idx: inp.dataset.idx, val: val });
     });
-    if(pkt !== "RUMUSAN" && payload.list.length === 0) return alert("Sila isi sekurang-kurangnya satu nilai!");
+    if(pkt !== "RUMUSAN" && payload.list.length === 0) return showToast("Sila isi nilai!", 'error');
   } else {
-    action = "savePusTuai"; 
     payload.hektar = FORMULA_STORE['hasil'] || document.getElementById('val-hasil').value;
-    if(!payload.hektar) return alert("Sila isi nilai hektar!");
+    if(!payload.hektar) return showToast("Sila isi nilai hektar!", 'error');
   }
 
   loader.style.display = 'flex';
@@ -460,30 +453,29 @@ async function processSaveMaster() {
     const r = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action, data: payload }) });
     const res = await r.json();
     loader.style.display = 'none';
-    alert(res.message);
-    if(res.ok && mode === "PUS_TUAI") fetchStats();
-  } catch(e) { loader.style.display = 'none'; alert("Ralat Sambungan!"); }
+    showToast(res.message, res.ok ? 'success' : 'error');
+  } catch(e) { loader.style.display = 'none'; showToast("Ralat Sambungan!", 'error'); }
 }
 
 async function saveData(type) {
   const loader = document.getElementById('loader');
-  const fullDate = document.getElementById(`date-${type}`).value;
+  const d = document.getElementById(`date-${type}`).value;
   const pkt = document.getElementById(`sel-pkt-${type}`).value;
   
-  let payload = { peringkat: pkt, tarikh: fullDate, day: Number(fullDate.split('-')[2]) };
+  let payload = { peringkat: pkt, tarikh: d, day: Number(d.split('-')[2]) };
   let action = (type === 'muda') ? "saveMudaBulk" : (type === 'tandan' ? "saveTandanBulk" : "savePenalti");
   payload.list = [];
 
   if(type === 'penalti') {
     payload.type = document.getElementById('type-penalti').value;
     payload.val = FORMULA_STORE['penalti'] || document.getElementById('val-penalti').value;
-    if(!payload.val) return alert("Sila isi nilai!");
+    if(!payload.val) return showToast("Sila isi nilai!", 'error');
   } else {
     document.querySelectorAll(`.bulk-${type}`).forEach(inp => {
       let val = FORMULA_STORE[type + (inp.dataset.team || "")] || inp.value;
       if(val.trim() !== "") payload.list.push({ team: inp.dataset.team, val: val });
     });
-    if(payload.list.length === 0) return alert("Sila isi sekurang-kurangnya satu nilai!");
+    if(payload.list.length === 0) return showToast("Sila isi nilai!", 'error');
   }
 
   loader.style.display = 'flex';
@@ -491,16 +483,8 @@ async function saveData(type) {
     const r = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action, data: payload }) });
     const res = await r.json();
     loader.style.display = 'none';
-    alert(res.message);
-  } catch(e) { loader.style.display = 'none'; alert("Ralat Sambungan!"); }
-}
-
-async function fetchStats() {
-  try {
-    const r = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: 'getHarvestStatus', data: {} }) });
-    const res = await r.json();
-    if(res.ok) { HARVEST_STATS = res.stats; updateStatsDisplay(document.getElementById('sel-pkt-hasil').value); }
-  } catch(e){}
+    showToast(res.message, res.ok ? 'success' : 'error');
+  } catch(e) { loader.style.display = 'none'; showToast("Ralat Sambungan!", 'error'); }
 }
 
 async function runAdmin(act) {
@@ -512,11 +496,19 @@ async function runAdmin(act) {
     const res = await r.json();
     loader.style.display = 'none';
     if(act === 'refreshRumusan' && res.tan !== undefined) {
-      document.getElementById('display-tan-rumusan').textContent = Number(res.tan).toFixed(2);
+      document.getElementById('display-tan-live').textContent = Number(res.tan).toFixed(2);
       FORMULA_STORE['hasil'] = String(res.tan); 
     }
-    alert(res.message);
-  } catch(e){ loader.style.display = 'none'; alert("Ralat!"); }
+    showToast(res.message, res.ok ? 'success' : 'error');
+  } catch(e){ loader.style.display = 'none'; showToast("Ralat!", 'error'); }
+}
+
+async function fetchStats() {
+  try {
+    const r = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: 'getHarvestStatus', data: {} }) });
+    const res = await r.json();
+    if(res.ok) { HARVEST_STATS = res.stats; updateStatsDisplay(document.getElementById('sel-pkt-hasil').value); }
+  } catch(e){}
 }
 
 async function getReport(t) {
@@ -531,7 +523,10 @@ async function getReport(t) {
   }
 }
 
-function copyText() { const t = document.getElementById('report-out'); t.select(); document.execCommand('copy'); alert("Disalin!"); }
+function copyText() { 
+  const t = document.getElementById('report-out'); t.select(); document.execCommand('copy'); 
+  showToast("Laporan disalin!", 'success'); 
+}
 </script>
 </body>
 </html>
