@@ -113,10 +113,9 @@
     button:active { transform: scale(0.98); }
     
     .btn-success { background: linear-gradient(135deg, #2ecc71, #27ae60); color: white; }
-    .btn-primary { background: linear-gradient(135deg, #4a90e2, #357abd); color: white; }
+    .btn-secondary { background: #fff; border: 2px solid #ecf0f1; color: #555; box-shadow: none; }
     .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
     .btn-warning { background: linear-gradient(135deg, #f1c40f, #f39c12); color: #fff; }
-    .btn-secondary { background: #fff; border: 2px solid #ecf0f1; color: #555; box-shadow: none; }
 
     .info-status { 
       background: #e8f8f5; border: 1px solid #d1f2eb; border-radius: 10px; 
@@ -189,24 +188,31 @@
 
       <div id="wrap-team-hasil" style="margin-top:15px;"></div>
 
+      <div id="wrap-rumusan-display" class="card" style="display:none; background:#fff8e1; border:1px solid #ffe082; text-align:center; margin-top:15px;">
+        <label style="color:#f57f17;">JUMLAH TAN KESELURUHAN (HARI INI)</label>
+        <div id="display-tan-rumusan" style="font-size:32px; font-weight:800; color:#e65100;">0.00</div>
+        <small style="color:#8d6e63;">Sila tekan 'SAVE MASTER' untuk simpan nilai ini.</small>
+      </div>
+
       <div id="box-status-tuai" class="info-status" style="display:none;">
          <div class="info-item"><span>SIAP TUAI</span><b id="valSiap">0.00</b></div>
          <div class="info-divider"></div>
-         <div class="info-item status-baki"><span>BAKI LUAS</span><b id="valBaki" style="color:var(--danger)">0.00</b></div>
+         <div class="info-item"><span>BAKI LUAS</span><b id="valBaki" style="color:var(--danger)">0.00</b></div>
       </div>
 
       <div id="wrap-single-hasil" class="input-group" style="margin-top:20px; display:none;">
         <label id="lbl-val-hasil">NILAI</label>
         <input type="text" id="val-hasil" class="big-input" placeholder="0.00" inputmode="text"
-               onfocus="onFocusInput('hasil')" onblur="onBlurInput('hasil')" oninput="onInputHandler('hasil')">
+               onfocus="onFocusInput(this,'hasil')" onblur="onBlurInput(this,'hasil')" oninput="onInputHandler(this,'hasil')">
       </div>
 
       <div style="margin-top:25px; border-top:1px dashed #ddd; padding-top:20px;">
         <button id="btnRefRumusan" class="btn-secondary" onclick="runAdmin('refreshRumusan')" style="display:none; margin-bottom:10px; width:100%"><i class="material-icons">sync</i> REFRESH RUMUSAN</button>
         <button class="btn-success" onclick="processSaveMaster()" style="width:100%">
-          <i class="material-icons">cloud_upload</i> SAVE MASTER (FORCE)
+          <i class="material-icons">cloud_upload</i> SAVE MASTER
         </button>
       </div>
+      <div id="msg-hasil" class="msg-box"></div>
     </div>
   </div>
 
@@ -239,7 +245,7 @@
       <div class="input-group" style="margin-top:20px;">
         <label>BILANGAN TANDAN</label>
         <input type="text" id="val-penalti" class="big-input" placeholder="0" inputmode="text"
-               onfocus="onFocusInput('penalti')" onblur="onBlurInput('penalti')" oninput="onInputHandler('penalti')">
+               onfocus="onFocusInput(this,'penalti')" onblur="onBlurInput(this,'penalti')" oninput="onInputHandler(this,'penalti')">
       </div>
       <div class="btn-group">
         <button class="btn-danger" onclick="saveData('penalti')"><i class="material-icons">error_outline</i> SIMPAN PENALTI</button>
@@ -281,7 +287,7 @@
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwH9NrkZCZ6MOVczxSrcJFOnIenf3IyIm4R1NX8VC-_ZOQoipPrEE2mT7eu7oLe24y7BQ/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbzTE4jOpxIS3BJPrUhInTeoaJOLLEnMnRLN1adIIUBYfHrynJARZATNacvcCli38KXUBg/exec"; 
 
 const HASIL_CFG = { pkt: ["PKT004","PKT001","PKT002","PKT001G","PKT003G","RUMUSAN"], teams: { PKT004: ["BLOK 1","BLOK 2","BLOK 3","BLOK 4","BLOK 5"], PKT002: ["TEAM PKT","TEAM 1","TEAM 2","TEAM TKA","TEAM TKA BAJA"], PKT001G:["HABIBI","P.BOWO","MEGA","TEAM TKA","TEAM TKA BAJA"], PKT003G:["TEAM KIRI","TEAM KANAN","TEAM BLOK C","TEAM TKA","TEAM TKA BAJA"] } };
 const MUDA_CFG = { "PKT001G": ["HABIBI", "P.BOWO", "MEGA", "TKA"], "PKT002": ["TEAM PKT", "TEAM 1", "TEAM 2", "TKA"], "PKT003G": ["KIRI", "KANAN", "BLOK C", "TKA"], "PKT004A": ["BLOK 1", "BLOK 2", "BLOK 3", "BLOK 4", "BLOK 5"] };
@@ -309,15 +315,13 @@ function nav(id, el) {
 // ==========================================
 // SMART FORMULA ENGINE (FOR BULK & SINGLE)
 // ==========================================
-function onInputHandler(id, type) {
-  const el = (id instanceof HTMLElement) ? id : document.getElementById(id);
-  const key = type + (el.dataset.idx || el.dataset.team || "");
+function onInputHandler(el, type) {
+  const key = type + (el.dataset.idx !== undefined ? el.dataset.idx : (el.dataset.team || ""));
   FORMULA_STORE[key] = el.value;
 }
 
-function onBlurInput(id, type) {
-  const el = (id instanceof HTMLElement) ? id : document.getElementById(id);
-  const key = type + (el.dataset.idx || el.dataset.team || "");
+function onBlurInput(el, type) {
+  const key = type + (el.dataset.idx !== undefined ? el.dataset.idx : (el.dataset.team || ""));
   let val = el.value.trim();
   if(!val) { FORMULA_STORE[key] = ""; return; }
 
@@ -330,13 +334,12 @@ function onBlurInput(id, type) {
     try {
       let result = Function('"use strict";return (' + val.substring(1) + ')')();
       if (!isNaN(result)) el.value = (result % 1 !== 0) ? result.toFixed(2) : result;
-    } catch(e) {}
+    } catch(e) { console.error("Kiraan ralat", e); }
   }
 }
 
-function onFocusInput(id, type) {
-  const el = (id instanceof HTMLElement) ? id : document.getElementById(id);
-  const key = type + (el.dataset.idx || el.dataset.team || "");
+function onFocusInput(el, type) {
+  const key = type + (el.dataset.idx !== undefined ? el.dataset.idx : (el.dataset.team || ""));
   if (FORMULA_STORE[key] && FORMULA_STORE[key].startsWith('=')) el.value = FORMULA_STORE[key];
 }
 
@@ -355,14 +358,18 @@ function renderTeamHasil() {
   const mode = document.getElementById('mode-hasil').value;
   const wrap = document.getElementById('wrap-team-hasil');
   const wrapSingle = document.getElementById('wrap-single-hasil');
+  const wrapRumusan = document.getElementById('wrap-rumusan-display');
   
   if(p === "RUMUSAN") {
     alert("📢 NOTA: Sila klik 'REFRESH RUMUSAN' dahulu!");
     document.getElementById('btnRefRumusan').style.display = 'block';
     wrap.innerHTML = ""; wrapSingle.style.display = 'none';
+    wrapRumusan.style.display = 'block';
+    document.getElementById('display-tan-rumusan').textContent = "0.00";
     return;
   }
   document.getElementById('btnRefRumusan').style.display = 'none';
+  wrapRumusan.style.display = 'none';
 
   if(mode === "TAN") {
     wrapSingle.style.display = 'none';
@@ -378,6 +385,7 @@ function renderTeamHasil() {
     wrap.innerHTML = html;
   } else {
     wrap.innerHTML = ""; wrapSingle.style.display = 'block';
+    document.getElementById('lbl-val-hasil').textContent = "NILAI HEKTAR : " + p;
   }
   updateStatsDisplay(p);
 }
@@ -438,10 +446,13 @@ async function processSaveMaster() {
     action = "saveTanBulk"; payload.list = [];
     document.querySelectorAll('.bulk-hasil').forEach(inp => {
       let val = FORMULA_STORE['hasil' + inp.dataset.idx] || inp.value;
-      if(val.trim() !== "") payload.list.push({ idx: inp.dataset.idx, val: val });
+      if(val.trim() !== "" && val.trim() !== "0") payload.list.push({ idx: inp.dataset.idx, val: val });
     });
+    if(pkt !== "RUMUSAN" && payload.list.length === 0) return alert("Sila isi sekurang-kurangnya satu nilai!");
   } else {
-    action = "savePusTuai"; payload.hektar = FORMULA_STORE['hasil'] || document.getElementById('val-hasil').value;
+    action = "savePusTuai"; 
+    payload.hektar = FORMULA_STORE['hasil'] || document.getElementById('val-hasil').value;
+    if(!payload.hektar) return alert("Sila isi nilai hektar!");
   }
 
   loader.style.display = 'flex';
@@ -451,7 +462,7 @@ async function processSaveMaster() {
     loader.style.display = 'none';
     alert(res.message);
     if(res.ok && mode === "PUS_TUAI") fetchStats();
-  } catch(e) { loader.style.display = 'none'; alert("Error!"); }
+  } catch(e) { loader.style.display = 'none'; alert("Ralat Sambungan!"); }
 }
 
 async function saveData(type) {
@@ -466,11 +477,13 @@ async function saveData(type) {
   if(type === 'penalti') {
     payload.type = document.getElementById('type-penalti').value;
     payload.val = FORMULA_STORE['penalti'] || document.getElementById('val-penalti').value;
+    if(!payload.val) return alert("Sila isi nilai!");
   } else {
     document.querySelectorAll(`.bulk-${type}`).forEach(inp => {
       let val = FORMULA_STORE[type + (inp.dataset.team || "")] || inp.value;
       if(val.trim() !== "") payload.list.push({ team: inp.dataset.team, val: val });
     });
+    if(payload.list.length === 0) return alert("Sila isi sekurang-kurangnya satu nilai!");
   }
 
   loader.style.display = 'flex';
@@ -479,7 +492,7 @@ async function saveData(type) {
     const res = await r.json();
     loader.style.display = 'none';
     alert(res.message);
-  } catch(e) { loader.style.display = 'none'; alert("Error!"); }
+  } catch(e) { loader.style.display = 'none'; alert("Ralat Sambungan!"); }
 }
 
 async function fetchStats() {
@@ -498,8 +511,12 @@ async function runAdmin(act) {
     const r = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: act, data: { peringkat: document.getElementById('sel-pkt-hasil').value, day: Number(d.split('-')[2]) } }) });
     const res = await r.json();
     loader.style.display = 'none';
+    if(act === 'refreshRumusan' && res.tan !== undefined) {
+      document.getElementById('display-tan-rumusan').textContent = Number(res.tan).toFixed(2);
+      FORMULA_STORE['hasil'] = String(res.tan); 
+    }
     alert(res.message);
-  } catch(e){ loader.style.display = 'none'; alert("Error!"); }
+  } catch(e){ loader.style.display = 'none'; alert("Ralat!"); }
 }
 
 async function getReport(t) {
