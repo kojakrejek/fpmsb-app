@@ -51,7 +51,7 @@
     .info-status { background: #e8f8f5; border: 1px solid #d1f2eb; border-radius: 10px; padding: 12px; margin: 15px 0; display: flex; justify-content: space-between; align-items: center; }
     .info-item { text-align: center; width: 45%; }
     .info-item span { font-size: 11px; color: #16a085; font-weight: 600; }
-    .info-item b { display: block; font-size: 15px; color: #0e6655; margin-top: 2px; }
+    .info-item b { display: block; font-size: 16px; color: #0e6655; margin-top: 2px; }
     .info-divider { width: 1px; height: 30px; background: #d1f2eb; }
     #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; display: none; backdrop-filter: blur(5px); }
     .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 0.8s linear infinite; }
@@ -65,7 +65,7 @@
     @keyframes slideUp { from { opacity:0; transform:translateY(15px); } to { opacity:1; transform:translateY(0); } }
     
     /* STATS BADGE & HEADER */
-    .stat-badge { font-size:10px; color:#fff; background:#95a5a6; padding:2px 6px; border-radius:10px; margin-left:5px; vertical-align:middle; }
+    .stat-badge { font-size:10px; color:#fff; background:var(--success); padding:2px 6px; border-radius:10px; margin-left:5px; vertical-align:middle; font-weight:bold; }
     .stats-header { background: #e3f2fd; color: #1565c0; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; font-weight: 600; text-align: center; display: none; border: 1px solid #bbdefb; }
   </style>
 </head>
@@ -189,7 +189,7 @@
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyDW41CiOnXdp5uWPykA8GRtTeTr-jshrVZzmlWOo4SWbXTJ8nfRNWNF1R8bPL2jl9ohg/exec"; // Guna URL Deploy Terbaru
+const API_URL = "https://script.google.com/macros/s/AKfycbzrF5OM5hLNbthA3uZm9Ypi75Of_fJBUJW22o2gs_Lg6fV-e54HKDP6CNERoOXKHcmmDw/exec"; // URL INI MESTI URL BACKEND TERBARU
 
 const HASIL_CFG = { pkt: ["PKT004","PKT001","PKT002","PKT001G","PKT003G","RUMUSAN"], teams: { PKT004: ["BLOK 1","BLOK 2","BLOK 3","BLOK 4","BLOK 5"], PKT002: ["TEAM PKT","TEAM 1","TEAM 2","TEAM TKA","TEAM TKA BAJA"], PKT001G:["HABIBI","P.BOWO","MEGA","TEAM TKA","TEAM TKA BAJA"], PKT003G:["TEAM KIRI","TEAM KANAN","TEAM BLOK C","TEAM TKA","TEAM TKA BAJA"] } };
 const MUDA_CFG = { "PKT001G": ["HABIBI", "P.BOWO", "MEGA", "TKA"], "PKT002": ["TEAM PKT", "TEAM 1", "TEAM 2", "TKA"], "PKT003G": ["KIRI", "KANAN", "BLOK C", "TKA"], "PKT004A": ["BLOK 1", "BLOK 2", "BLOK 3", "BLOK 4", "BLOK 5"] };
@@ -197,7 +197,6 @@ const TANDAN_CFG = { "PKT004": ["BLOK 1", "BLOK 2", "BLOK 3", "BLOK 4", "BLOK 5"
 
 let FORMULA_STORE = {}; 
 let HARVEST_STATS = null;
-let TEAM_STATS = {}; // Simpan data statistik team
 
 window.onload = () => {
   const today = new Date().toISOString().split('T')[0];
@@ -302,29 +301,52 @@ function renderTeamHasil() {
   updateStatsDisplay(p);
 }
 
+// -------------------------------------------------------------
+// PATCHED RENDER FUNCTIONS (LUKIS DULU, LOAD DATA BACKGROUND)
+// -------------------------------------------------------------
+
 function renderTeamMuda() {
   const p = document.getElementById('sel-pkt-muda').value;
-  fetchStatsData("MUDA", p); // Fetch stats bila tukar
+  // 1. Render Input Terus (Instant)
+  let cfg = MUDA_CFG;
+  let html = `<label>SENARAI TEAM : ${p}</label>`;
+  (cfg[p] || []).forEach(t => {
+      // Label ada ID khas untuk kita tembak badge nanti
+      html += `<div class="bulk-row"><label id="lbl-muda-${t}">${t}</label><input type="text" class="bulk-muda" data-team="${t}" placeholder="0" onfocus="onFocusInput(this,'muda')" onblur="onBlurInput(this,'muda')" oninput="onInputHandler(this,'muda')"></div>`;
+  });
+  document.getElementById('wrap-team-muda').innerHTML = html;
+
+  // 2. Tarik Data (User boleh menaip sambil tunggu)
+  fetchStatsData("MUDA", p); 
 }
 
 function renderTeamTandan() {
   const p = document.getElementById('sel-pkt-tandan').value;
-  fetchStatsData("TANDAN", p); // Fetch stats bila tukar
+  // 1. Render Input Terus (Instant)
+  let cfg = TANDAN_CFG;
+  let html = `<label>SENARAI TEAM : ${p}</label>`;
+  (cfg[p] || []).forEach(t => {
+      html += `<div class="bulk-row"><label id="lbl-tandan-${t}">${t}</label><input type="text" class="bulk-tandan" data-team="${t}" placeholder="0" onfocus="onFocusInput(this,'tandan')" onblur="onBlurInput(this,'tandan')" oninput="onInputHandler(this,'tandan')"></div>`;
+  });
+  document.getElementById('wrap-team-tandan').innerHTML = html;
+
+  // 2. Tarik Data
+  fetchStatsData("TANDAN", p);
 }
 
 function renderPeringkatPenalti() {
   const p = document.getElementById('sel-pkt-penalti').value;
   const type = document.getElementById('type-penalti').value;
+  // Reset label stat dulu (Penalti tiada isu list, dia single box)
+  document.getElementById('stat-penalti').textContent = "Loading...";
   fetchStatsData("PENALTI", p, type);
 }
 
-// --- NEW FUNCTION: DRAW STATS IN UI ---
+// --- PATCHED: SILENT UPDATE FUNCTION (TAK PADAM INPUT) ---
 function drawStatsUI(mode, pkt, data) {
   if (mode === "MUDA" || mode === "TANDAN") {
-    const wrap = document.getElementById(mode === "MUDA" ? 'wrap-team-muda' : 'wrap-team-tandan');
+    // 1. Update Header Stats
     const header = document.getElementById(mode === "MUDA" ? 'stats-header-muda' : 'stats-header-tandan');
-    
-    // Header Stats
     if(data.totalPkt !== undefined) {
       let txt = `TOTAL PKT: ${data.totalPkt}`;
       if(mode === "TANDAN" && data.berat) {
@@ -335,17 +357,19 @@ function drawStatsUI(mode, pkt, data) {
       header.style.display = 'block';
     } else { header.style.display = 'none'; }
 
-    // Input List with Stats Badge
+    // 2. Update Label Badge (Cari Label, Jangan Kacau Input)
     let cfg = (mode === "MUDA") ? MUDA_CFG : TANDAN_CFG;
-    let html = `<label>SENARAI TEAM : ${pkt}</label>`;
     (cfg[pkt] || []).forEach(t => {
-      let statBadge = "";
-      if (data.teams && data.teams[t] !== undefined) {
-        statBadge = `<span class="stat-badge">${data.teams[t]}</span>`;
-      }
-      html += `<div class="bulk-row"><label>${t} ${statBadge}</label><input type="text" class="bulk-${mode.toLowerCase()}" data-team="${t}" placeholder="0" onfocus="onFocusInput(this,'${mode.toLowerCase()}')" onblur="onBlurInput(this,'${mode.toLowerCase()}')" oninput="onInputHandler(this,'${mode.toLowerCase()}')"></div>`;
+        const labelEl = document.getElementById(`lbl-${mode.toLowerCase()}-${t}`);
+        if (labelEl) {
+            // Reset text kepada nama team
+            labelEl.innerHTML = t; 
+            // Tambah badge jika ada data
+            if (data.teams && data.teams[t] !== undefined) {
+                labelEl.innerHTML += ` <span class="stat-badge">${data.teams[t]}</span>`;
+            }
+        }
     });
-    wrap.innerHTML = html;
   }
   else if (mode === "PENALTI") {
     const el = document.getElementById('stat-penalti');
@@ -356,16 +380,14 @@ function drawStatsUI(mode, pkt, data) {
 
 // --- ASYNC FETCH STATS ---
 async function fetchStatsData(mode, pkt, type="") {
-  const header = document.getElementById(mode === "MUDA" ? 'stats-header-muda' : (mode==="TANDAN"?'stats-header-tandan':'stat-penalti'));
-  if(header) header.textContent = "Loading...";
-  
+  // Hanya panggil backend, jangan usik UI di sini
   try {
     const r = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: 'getTeamStats', data: { mode, peringkat: pkt, type } }) });
     const res = await r.json();
     if (res.ok) {
       drawStatsUI(mode, pkt, res.stats || {});
     } else {
-      drawStatsUI(mode, pkt, {}); // Fail safe
+      drawStatsUI(mode, pkt, {}); 
     }
   } catch(e) { console.error(e); }
 }
