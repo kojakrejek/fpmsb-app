@@ -290,13 +290,13 @@
       <label>JANA LAPORAN HARIAN</label>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px;"><button class="btn-secondary" onclick="getReport('PO')">PO</button><button class="btn-secondary" onclick="getReport('RUMUSAN')">RUMUSAN</button></div>
       <button class="btn-primary" onclick="getReport('ALL')" style="margin-top:20px; width:100%"><i class="material-icons-round">description</i> JANA SEMUA</button>
-      <div id="reportResult" style="margin-top:20px; display:none;"><textarea id="report-out" style="width:100%; height:200px; padding:15px; border-radius:15px; border:2px solid #eff0f6; background:#f9faff; font-family:monospace; color:#2b3674;" readonly></textarea><button class="btn-success" onclick="copyText()" style="margin-top:15px; width:100%"><i class="material-icons-round">content_copy</i> SALIN TEKS</button></div>
+      <div id="reportResult" style="margin-top:20px; display:none;"><textarea id="report-out" style="width:100%; height:200px; padding:15px; border-radius:16px; border:2px solid #eff0f6; background:#f9faff; font-family:monospace; color:#2b3674;" readonly></textarea><button class="btn-success" onclick="copyText()" style="margin-top:15px; width:100%"><i class="material-icons-round">content_copy</i> SALIN TEKS</button></div>
     </div>
   </div>
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwLDbAgSqag40heimQ2LgrIeYURBsBlcRe0P4DySAJBM7oPLpqBfuzMz_YVVwT_rwqi/exec"; // URL BACKEND LATEST
+const API_URL = "https://script.google.com/macros/s/AKfycbx3rjYa3RlFw4rrm7zcXrRj8SFoRWuADJjqbBJZWCiLbFX2YfpkygcCJcJxhNTWVxHPKQ/exec"; 
 
 const HASIL_CFG = { pkt: ["PKT004","PKT001","PKT002","PKT001G","PKT003G","RUMUSAN"], teams: { PKT004: ["BLOK 1","BLOK 2","BLOK 3","BLOK 4","BLOK 5"], PKT002: ["TEAM PKT","TEAM 1","TEAM 2","TEAM TKA","TEAM TKA BAJA"], PKT001G:["HABIBI","P.BOWO","MEGA","TEAM TKA","TEAM TKA BAJA"], PKT003G:["TEAM KIRI","TEAM KANAN","TEAM BLOK C","TEAM TKA","TEAM TKA BAJA"] } };
 const MUDA_CFG = { "PKT001G": ["HABIBI", "P.BOWO", "MEGA", "TKA"], "PKT002": ["TEAM PKT", "TEAM 1", "TEAM 2", "TKA"], "PKT003G": ["KIRI", "KANAN", "BLOK C", "TKA"], "PKT004A": ["BLOK 1", "BLOK 2", "BLOK 3", "BLOK 4", "BLOK 5"] };
@@ -365,8 +365,9 @@ function onFocusInput(el, type) {
   if (FORMULA_STORE[key] && FORMULA_STORE[key].startsWith('=')) el.value = FORMULA_STORE[key];
 }
 
-// --- RENDER LOGIC ---
+// --- RENDER LOGIC DENGAN MEMORY WIPE ---
 function renderPeringkatHasil() {
+  Object.keys(FORMULA_STORE).forEach(k => { if(k.startsWith('hasil')) delete FORMULA_STORE[k]; });
   const sel = document.getElementById('sel-pkt-hasil');
   const mode = document.getElementById('mode-hasil').value;
   const list = (mode === "PUS_TUAI") ? HASIL_CFG.pkt.filter(x => x !== "RUMUSAN") : HASIL_CFG.pkt;
@@ -375,6 +376,7 @@ function renderPeringkatHasil() {
 }
 
 function renderTeamHasil() {
+  Object.keys(FORMULA_STORE).forEach(k => { if(k.startsWith('hasil')) delete FORMULA_STORE[k]; });
   const p = document.getElementById('sel-pkt-hasil').value;
   const mode = document.getElementById('mode-hasil').value;
   const wrap = document.getElementById('wrap-team-hasil');
@@ -408,51 +410,41 @@ function renderTeamHasil() {
   updateStatsDisplay(p);
 }
 
-// -------------------------------------------------------------
-// PATCHED RENDER FUNCTIONS (LUKIS DULU, LOAD DATA BACKGROUND)
-// -------------------------------------------------------------
-
 function renderTeamMuda() {
+  Object.keys(FORMULA_STORE).forEach(k => { if(k.startsWith('muda')) delete FORMULA_STORE[k]; });
   const p = document.getElementById('sel-pkt-muda').value;
-  // 1. Render Input Terus (Instant)
   let cfg = MUDA_CFG;
   let html = `<label>SENARAI TEAM : ${p}</label>`;
   (cfg[p] || []).forEach(t => {
-      // Label ada ID khas untuk kita tembak badge nanti
       html += `<div class="bulk-row"><label id="lbl-muda-${t}">${t}</label><input type="text" class="bulk-muda" data-team="${t}" placeholder="0" onfocus="onFocusInput(this,'muda')" onblur="onBlurInput(this,'muda')" oninput="onInputHandler(this,'muda')"></div>`;
   });
   document.getElementById('wrap-team-muda').innerHTML = html;
-
-  // 2. Tarik Data (Silent Load)
   fetchStatsData("MUDA", p); 
 }
 
 function renderTeamTandan() {
+  Object.keys(FORMULA_STORE).forEach(k => { if(k.startsWith('tandan')) delete FORMULA_STORE[k]; });
   const p = document.getElementById('sel-pkt-tandan').value;
-  // 1. Render Input Terus (Instant)
   let cfg = TANDAN_CFG;
   let html = `<label>SENARAI TEAM : ${p}</label>`;
   (cfg[p] || []).forEach(t => {
       html += `<div class="bulk-row"><label id="lbl-tandan-${t}">${t}</label><input type="text" class="bulk-tandan" data-team="${t}" placeholder="0" onfocus="onFocusInput(this,'tandan')" onblur="onBlurInput(this,'tandan')" oninput="onInputHandler(this,'tandan')"></div>`;
   });
   document.getElementById('wrap-team-tandan').innerHTML = html;
-
-  // 2. Tarik Data (Silent Load)
   fetchStatsData("TANDAN", p);
 }
 
 function renderPeringkatPenalti() {
+  Object.keys(FORMULA_STORE).forEach(k => { if(k.startsWith('penalti')) delete FORMULA_STORE[k]; });
   const p = document.getElementById('sel-pkt-penalti').value;
   const type = document.getElementById('type-penalti').value;
-  // Reset label stat dulu
   document.getElementById('stat-penalti').textContent = "Loading...";
   fetchStatsData("PENALTI", p, type);
 }
 
-// --- PATCHED: SILENT UPDATE FUNCTION (TAK PADAM INPUT) ---
+// --- SILENT UPDATE FUNCTION ---
 function drawStatsUI(mode, pkt, data) {
   if (mode === "MUDA" || mode === "TANDAN") {
-    // 1. Update Header Stats
     const header = document.getElementById(mode === "MUDA" ? 'stats-header-muda' : 'stats-header-tandan');
     if(data.totalPkt !== undefined) {
       let txt = `TOTAL PKT: ${data.totalPkt}`;
@@ -464,14 +456,11 @@ function drawStatsUI(mode, pkt, data) {
       header.style.display = 'block';
     } else { header.style.display = 'none'; }
 
-    // 2. Update Label Badge (Cari Label, Jangan Kacau Input)
     let cfg = (mode === "MUDA") ? MUDA_CFG : TANDAN_CFG;
     (cfg[pkt] || []).forEach(t => {
         const labelEl = document.getElementById(`lbl-${mode.toLowerCase()}-${t}`);
         if (labelEl) {
-            // Reset text kepada nama team
             labelEl.innerHTML = t; 
-            // Tambah badge jika ada data
             if (data.teams && data.teams[t] !== undefined) {
                 labelEl.innerHTML += ` <span class="stat-badge">${data.teams[t]}</span>`;
             }
@@ -485,17 +474,12 @@ function drawStatsUI(mode, pkt, data) {
   }
 }
 
-// --- ASYNC FETCH STATS ---
 async function fetchStatsData(mode, pkt, type="") {
-  // Hanya panggil backend, jangan usik UI di sini
   try {
     const r = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: 'getTeamStats', data: { mode, peringkat: pkt, type } }) });
     const res = await r.json();
-    if (res.ok) {
-      drawStatsUI(mode, pkt, res.stats || {});
-    } else {
-      drawStatsUI(mode, pkt, {}); 
-    }
+    if (res.ok) { drawStatsUI(mode, pkt, res.stats || {}); } 
+    else { drawStatsUI(mode, pkt, {}); }
   } catch(e) { console.error(e); }
 }
 
@@ -523,7 +507,7 @@ function updateStatsDisplay(p) {
 async function processSaveMaster() {
   const loader = document.getElementById('loader');
   const d = document.getElementById(`date-hasil`).value;
-  const pkt = document.getElementById(`sel-pkt-hasil`).value;
+  const pkt = document.getElementById('sel-pkt-hasil').value;
   const mode = document.getElementById('mode-hasil').value;
   
   let payload = { peringkat: pkt, tarikh: d, day: Number(d.split('-')[2]) };
@@ -546,7 +530,19 @@ async function processSaveMaster() {
     const r = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action, data: payload }) });
     const res = await r.json();
     loader.style.display = 'none';
-    if(res.ok) { showToast(res.message, 'success'); if(mode === "PUS_TUAI") fetchStats(); } 
+    if(res.ok) { 
+        showToast(res.message, 'success'); 
+        if(mode === "PUS_TUAI") fetchStats(); 
+        
+        // --- CLEAR FORMULA STORE SELEPAS SAVE (HASIL) ---
+        if(mode === "TAN") {
+            document.querySelectorAll('.bulk-hasil').forEach(inp => inp.value = "");
+            document.getElementById('display-tan-live').textContent = "0.00";
+        } else {
+            document.getElementById('val-hasil').value = "";
+        }
+        Object.keys(FORMULA_STORE).forEach(k => { if(k.startsWith('hasil')) delete FORMULA_STORE[k]; });
+    } 
     else { showToast(res.message, 'error'); }
   } catch(e) { loader.style.display = 'none'; showToast("Ralat Sambungan!", 'error'); }
 }
@@ -577,7 +573,15 @@ async function saveData(type) {
     const r = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action, data: payload }) });
     const res = await r.json();
     loader.style.display = 'none';
-    if(res.ok) showToast(res.message, 'success'); else showToast(res.message, 'error');
+    if(res.ok) { 
+        showToast(res.message, 'success'); 
+        
+        // --- CLEAR FORMULA STORE SELEPAS SAVE (LAIN-LAIN) ---
+        document.querySelectorAll(`.bulk-${type}`).forEach(inp => inp.value = "");
+        if(type === 'penalti') document.getElementById('val-penalti').value = "";
+        Object.keys(FORMULA_STORE).forEach(k => { if(k.startsWith(type)) delete FORMULA_STORE[k]; });
+    } 
+    else { showToast(res.message, 'error'); }
   } catch(e) { loader.style.display = 'none'; showToast("Ralat Sambungan!", 'error'); }
 }
 
