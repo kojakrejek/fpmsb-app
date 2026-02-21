@@ -1,5 +1,5 @@
 // TUKAR NOMBOR NI SETIAP KALI ADA UPDATE BESAR DI HTML
-const CACHE_NAME = 'fpmsb-v23'; // <--- Tukar jadi v3, v4 bila ada update lagi
+const CACHE_NAME = 'fpmsb-v24'; // <--- Tukar jadi v3, v4 bila ada update lagi
 
 const ASSETS = [
   './',
@@ -40,6 +40,7 @@ self.addEventListener('fetch', (e) => {
     fetch(e.request).catch(() => caches.match(e.request))
   );
 });
+
 
 
 
