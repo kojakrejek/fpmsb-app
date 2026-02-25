@@ -236,6 +236,47 @@ body {
 .sb-item.active { background: rgba(67, 97, 238, 0.10); color: var(--primary); border-left-color: var(--primary); }
 .sb-item.active i { color: var(--primary); }
 
+/* =========================================================================
+   PATCH BARU: DASHBOARD MUKA DEPAN (NEW)
+   ========================================================================= */
+.welcome-box { display:flex; align-items:center; gap:15px; margin-bottom:25px; }
+.welcome-box img { width: 60px; height: 60px; border-radius: 16px; box-shadow: var(--shadow-card); background: var(--surface); padding: 5px; }
+.welcome-box h2 { margin:0; font-size:18px; font-weight:900; color:var(--text-main); }
+.welcome-box p { margin:0; font-size:13px; color:var(--text-muted); font-weight:600; }
+
+.qa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; margin-bottom: 40px; }
+.qa-card { 
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.00)), var(--surface);
+  border: 1px solid var(--border); border-radius: 20px; padding: 20px 15px; 
+  text-align: center; box-shadow: var(--shadow-card); cursor: pointer; transition: 0.2s; 
+}
+.qa-card:active { transform: scale(0.95); }
+.qa-card i { font-size: 32px; color: var(--primary); margin-bottom: 10px; display:block; }
+.qa-card span { font-size: 12px; font-weight: 800; color: var(--text-main); }
+
+.dash-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 24px; padding: 20px; margin-bottom: 20px;
+  box-shadow: var(--shadow-card);
+}
+.dash-card.rumusan { border: 2px solid var(--primary); background: linear-gradient(180deg, rgba(67,97,238,0.05), var(--surface)); }
+.dc-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--border); padding-bottom: 12px; margin-bottom: 15px; }
+.dc-title { font-size: 16px; font-weight: 900; color: var(--primary); display:flex; align-items:center; gap:8px;}
+.dc-luas { font-size: 12px; font-weight: 800; color: var(--success); background: rgba(5,205,153,0.1); padding: 4px 10px; border-radius: 10px; }
+
+.dc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.dc-box { background: var(--input-bg); padding: 12px; border-radius: 14px; text-align: center; border: 1px solid var(--border); }
+.dc-box span { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 5px; }
+.dc-val { font-size: 16px; font-weight: 900; color: var(--text-main); }
+.dc-sub { font-size: 11px; font-weight: 700; color: var(--text-muted); margin-top: 3px; display:block; }
+
+.pb-wrap { margin-bottom: 15px; }
+.pb-labels { display: flex; justify-content: space-between; font-size: 11px; font-weight: 800; margin-bottom: 6px; color: var(--text-main); }
+.pb-pct { font-weight: 900; }
+.pb-bg { width: 100%; height: 10px; background: var(--input-bg); border-radius: 10px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
+.pb-fill { height: 100%; border-radius: 10px; transition: width 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+/* ========================================================================= */
+
 /* --- CARDS & UI ELEMENTS --- */
 .card {
   background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.00)), var(--surface);
@@ -471,17 +512,53 @@ i.material-icons-round { user-select:none; }
 <div class="sidebar">
   <div class="sb-header"><img class="sb-logo" src="https://i.imgur.com/APuF5wN.png" alt="Logo"><div class="sb-logo-text">SISTEM LADANG</div></div>
   <div class="sb-menu">
-    <div class="sb-item active" onclick="nav('page-hasil', this)"><i class="material-icons-round">bar_chart</i>INPUT HASIL</div>
-    <div class="sb-item" onclick="nav('page-muda', this)"><i class="material-icons-round">eco</i>BTB MUDA</div>
-    <div class="sb-item" onclick="nav('page-penalti', this)"><i class="material-icons-round">warning</i>PENALTI</div>
-    <div class="sb-item" onclick="nav('page-tandan', this)"><i class="material-icons-round">inventory_2</i>REKOD TANDAN</div>
-    <div class="sb-item" onclick="nav('page-admin', this)"><i class="material-icons-round">settings</i>ADMIN & REPORT</div>
+    <div class="sb-item active" id="menu-home" onclick="nav('page-home', this)"><i class="material-icons-round">dashboard</i>DASHBOARD</div>
+    <div class="sb-item" id="menu-hasil" onclick="nav('page-hasil', this)"><i class="material-icons-round">bar_chart</i>INPUT HASIL</div>
+    <div class="sb-item" id="menu-muda" onclick="nav('page-muda', this)"><i class="material-icons-round">eco</i>BTB MUDA</div>
+    <div class="sb-item" id="menu-penalti" onclick="nav('page-penalti', this)"><i class="material-icons-round">warning</i>PENALTI</div>
+    <div class="sb-item" id="menu-tandan" onclick="nav('page-tandan', this)"><i class="material-icons-round">inventory_2</i>REKOD TANDAN</div>
+    <div class="sb-item" id="menu-admin" onclick="nav('page-admin', this)"><i class="material-icons-round">settings</i>ADMIN & REPORT</div>
   </div>
 </div>
 
 <div class="app-container">
 
-  <div id="page-hasil" class="page-section active">
+  <div id="page-home" class="page-section active">
+    
+    <div class="welcome-box">
+      <img src="https://i.imgur.com/APuF5wN.png" alt="Logo">
+      <div>
+        <h2>Selamat Datang</h2>
+        <p>Dashboard Prestasi Ladang</p>
+      </div>
+    </div>
+
+    <div id="dash-container">
+      <div style="text-align:center; padding:30px; color:var(--text-muted); font-size:13px; font-weight:800;">
+        <div class="spinner" style="margin:0 auto 15px auto; width:30px; height:30px; border-width:3px; border-top-color:var(--primary);"></div>
+        Menarik data dashboard...
+      </div>
+    </div>
+
+    <h4 style="margin-top:30px; font-size:14px; color:var(--text-main); font-weight:900; margin-bottom:0;">MENU PANTAS</h4>
+    
+    <div class="qa-grid">
+      <div class="qa-card" onclick="nav('page-hasil', document.getElementById('menu-hasil'))">
+        <i class="material-icons-round">bar_chart</i><span>INPUT HASIL</span>
+      </div>
+      <div class="qa-card" onclick="nav('page-muda', document.getElementById('menu-muda'))">
+        <i class="material-icons-round">eco</i><span>BTB MUDA</span>
+      </div>
+      <div class="qa-card" onclick="nav('page-penalti', document.getElementById('menu-penalti'))">
+        <i class="material-icons-round">warning</i><span>PENALTI</span>
+      </div>
+      <div class="qa-card" onclick="nav('page-tandan', document.getElementById('menu-tandan'))">
+        <i class="material-icons-round">inventory_2</i><span>REKOD TANDAN</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-hasil" class="page-section">
     <div class="pill">MODE: HASIL</div>
     <div class="card">
       <div style="display:flex; gap:15px; margin-bottom:20px;">
@@ -508,7 +585,6 @@ i.material-icons-round { user-select:none; }
         <input type="text" id="val-hasil" class="big-input" placeholder="0.00" inputmode="text" onfocus="onFocusInput(this,'hasil')" onblur="onBlurInput(this,'hasil')" oninput="onInputHandler(this,'hasil')">
       </div>
       <div style="margin-top:30px; border-top:1px dashed rgba(148, 163, 184, 0.35); padding-top:20px;">
-        <!-- PATCH: guna btn-refresh (bukan btn-secondary) -->
         <button id="btnRefRumusan" class="btn-refresh" onclick="runAdmin('refreshRumusan')" style="display:none; margin-bottom:15px; width:100%">
           <i class="material-icons-round">sync</i> REFRESH RUMUSAN
         </button>
@@ -574,7 +650,6 @@ i.material-icons-round { user-select:none; }
     <div class="card">
       <label>JANA LAPORAN HARIAN</label>
 
-      <!-- PATCH: PO & RUMUSAN guna button berwarna -->
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px;">
         <button class="btn-po" onclick="getReport('PO')">PO</button>
         <button class="btn-rumusan" onclick="getReport('RUMUSAN')">RUMUSAN</button>
@@ -587,6 +662,7 @@ i.material-icons-round { user-select:none; }
       </div>
     </div>
   </div>
+
 </div>
 
 <script>
@@ -638,7 +714,7 @@ try {
   });
 } catch(e){}
 
-const API_URL = "https://script.google.com/macros/s/AKfycbww-dk_HH7KcOljdfG3ysEaow_X-ZVATDx2--2YoK44KnRTlTKX57leKCGckdSsjnwukA/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbwcy8a3p0T8a65tMuI0ppR2sb4H9_7_1T7HnJR-mlGpfJAdZfNQCDn0sgklm5dEQJVwHw/exec"; 
 
 const HASIL_CFG = { pkt: ["PKT004","PKT001","PKT002","PKT001G","PKT003G","RUMUSAN"], teams: { PKT004: ["BLOK 1","BLOK 2","BLOK 3","BLOK 4","BLOK 5"], PKT002: ["TEAM PKT","TEAM 1","TEAM 2","TEAM TKA","TEAM TKA BAJA"], PKT001G:["HABIBI","P.BOWO","MEGA","TEAM TKA","TEAM TKA BAJA"], PKT003G:["TEAM KIRI","TEAM KANAN","TEAM BLOK C","TEAM TKA","TEAM TKA BAJA"] } };
 const MUDA_CFG = { "PKT001G": ["HABIBI", "P.BOWO", "MEGA", "TKA"], "PKT002": ["TEAM PKT", "TEAM 1", "TEAM 2", "TKA"], "PKT003G": ["KIRI", "KANAN", "BLOK C", "TKA"], "PKT004A": ["BLOK 1", "BLOK 2", "BLOK 3", "BLOK 4", "BLOK 5"] };
@@ -652,6 +728,7 @@ window.onload = () => {
   ['date-hasil','date-muda','date-penalti','date-tandan'].forEach(id => document.getElementById(id).value = today);
   renderPeringkatHasil(); renderTeamMuda(); renderTeamTandan(); renderPeringkatPenalti();
   fetchStats(); 
+  loadDashboardData(); // PATCH: Mula tarik data dashboard bila buka app
 };
 
 function toggleMenu() { document.querySelector('.sidebar').classList.toggle('open'); document.querySelector('.overlay').classList.toggle('open'); }
@@ -670,6 +747,109 @@ function showToast(msg, type = 'success') {
   toast.className = 'show ' + type;
   icon.textContent = (type === 'success') ? 'check_circle' : (type === 'warning' ? 'report_problem' : 'error');
   setTimeout(() => { toast.classList.remove('show'); }, 3500);
+}
+
+// ============================================================================
+// FUNGSI BARU: DASHBOARD LOGIC
+// ============================================================================
+
+// 1. Fungsi penentu warna Progress Bar
+function getProgColor(pct) {
+  if(pct >= 90) return 'linear-gradient(90deg, #05cd99, #02a176)'; // Hijau (Cemerlang)
+  if(pct >= 80) return 'linear-gradient(90deg, #ffb547, #e0921f)'; // Kuning (Sederhana)
+  return 'linear-gradient(90deg, #ee5d50, #c93b2e)';               // Merah (Kritikal)
+}
+
+// 2. Fungsi pembina HTML untuk Kad Prestasi (Rumusan & PKT)
+function buildCardHTML(c, isRumusan = false) {
+  const title = isRumusan ? "🏆 RUMUSAN (KESELURUHAN)" : `📍 ${c.name}`;
+  const cssClass = isRumusan ? "dash-card rumusan" : "dash-card";
+  const hek = c.hektar ? c.hektar.toFixed(2) + " Ha" : "0.00 Ha";
+
+  return `
+    <div class="${cssClass}">
+      <div class="dc-header">
+        <div class="dc-title">${title}</div>
+        <div class="dc-luas">🌿 ${hek}</div>
+      </div>
+      
+      <div style="font-size:11px; font-weight:800; color:var(--text-muted); margin-bottom:10px;">📅 BULAN SEMASA</div>
+      <div class="dc-grid">
+        <div class="dc-box">
+          <span>📦 TAN</span>
+          <div class="dc-val">${c.capaiTan.toFixed(2)}</div>
+          <div class="dc-sub">Target: ${c.targetTan.toFixed(2)}</div>
+        </div>
+        <div class="dc-box">
+          <span>⚖️ TAN / HEK</span>
+          <div class="dc-val">${c.capaiTH.toFixed(2)}</div>
+          <div class="dc-sub">Target: ${c.targetTH.toFixed(2)}</div>
+        </div>
+      </div>
+
+      <div style="font-size:11px; font-weight:800; color:var(--text-muted); margin-bottom:10px;">📊 PRESTASI & PROGRESS</div>
+      
+      <div class="pb-wrap">
+        <div class="pb-labels">
+          <span>Bulan Ini (Capai: ${c.capaiTan.toFixed(2)} Tan / ${c.capaiTH.toFixed(2)} TH)</span>
+          <span class="pb-pct">${Math.round(c.pctBulan * 100)}%</span>
+        </div>
+        <div class="pb-bg"><div class="pb-fill" style="width:${Math.min(c.pctBulan*100, 100)}%; background:${getProgColor(c.pctBulan*100)}"></div></div>
+      </div>
+
+      <div class="pb-wrap">
+        <div class="pb-labels">
+          <span>Hingga Kini (YTD: ${c.ytdTan.toFixed(2)} Tan / ${c.ytdTH.toFixed(2)} TH)</span>
+          <span class="pb-pct">${Math.round(c.pctYTD * 100)}%</span>
+        </div>
+        <div class="pb-bg"><div class="pb-fill" style="width:${Math.min(c.pctYTD*100, 100)}%; background:${getProgColor(c.pctYTD*100)}"></div></div>
+      </div>
+
+      <div class="pb-wrap">
+        <div class="pb-labels">
+          <span>Tahun Ini (Target: ${c.tahunTargetTan.toFixed(2)} Tan / ${c.tahunTargetTH.toFixed(2)} TH)</span>
+          <span class="pb-pct">${Math.round(c.pctTahun * 100)}%</span>
+        </div>
+        <div class="pb-bg"><div class="pb-fill" style="width:${Math.min(c.pctTahun*100, 100)}%; background:${getProgColor(c.pctTahun*100)}"></div></div>
+      </div>
+
+    </div>
+  `;
+}
+
+// 3. Fungsi tarik data dari Backend dan paparkan ke skrin
+async function loadDashboardData() {
+  try {
+    // Panggil API WebApp (Guna API_URL sedia ada)
+    const r = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: 'getDashboardData', data: {} }) });
+    const res = await r.json();
+    const container = document.getElementById('dash-container');
+    
+    if(res.ok && res.payload) {
+      let html = "";
+      
+      // Susun kad: Rumusan di atas, diikuti oleh semua PKT
+      if(res.payload.rumusan) html += buildCardHTML(res.payload.rumusan, true);
+      if(res.payload.cards) res.payload.cards.forEach(c => html += buildCardHTML(c, false));
+      
+      // Tampal ke HTML
+      container.innerHTML = html || "<div style='text-align:center; padding:20px;'>Tiada rekod.</div>";
+      
+      // Animasi gerak Progress Bar (Mula dari 0 ke % sebenar)
+      setTimeout(() => {
+        document.querySelectorAll('.pb-fill').forEach(el => {
+          const w = el.style.width;
+          el.style.width = '0';
+          setTimeout(() => el.style.width = w, 50);
+        });
+      }, 50);
+
+    } else {
+      container.innerHTML = "<div style='text-align:center; padding:20px; color:var(--danger); font-weight:800;'>Gagal memuatkan data dari Master. Sila cuba lagi.</div>";
+    }
+  } catch(e) {
+    document.getElementById('dash-container').innerHTML = "<div style='text-align:center; padding:20px; color:var(--danger); font-weight:800;'>Tiada sambungan ke server.</div>";
+  }
 }
 
 function updateLiveTotal() {
@@ -884,6 +1064,8 @@ async function processSaveMaster() {
             document.getElementById('val-hasil').value = "";
         }
         Object.keys(FORMULA_STORE).forEach(k => { if(k.startsWith('hasil')) delete FORMULA_STORE[k]; });
+        
+        loadDashboardData(); // PATCH: Refresh Dashboard Data secara senyap di belakang
     } 
     else { showToast(res.message, 'error'); }
   } catch(e) { loader.style.display = 'none'; showToast("Ralat Sambungan!", 'error'); }
@@ -938,6 +1120,8 @@ async function runAdmin(act) {
     if(act === 'refreshRumusan' && res.tan !== undefined) {
       document.getElementById('display-tan-live').textContent = Number(res.tan).toFixed(2);
       FORMULA_STORE['hasil'] = String(res.tan); 
+      
+      loadDashboardData(); // PATCH: Refresh Dashboard Data secara senyap di belakang
     }
     showToast(res.message, res.ok ? 'success' : 'error');
   } catch(e){ loader.style.display = 'none'; showToast("Ralat!", 'error'); }
