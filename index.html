@@ -555,6 +555,10 @@ i.material-icons-round { user-select:none; }
       <div class="qa-card" onclick="nav('page-tandan', document.getElementById('menu-tandan'))">
         <i class="material-icons-round">inventory_2</i><span>REKOD TANDAN</span>
       </div>
+      
+      <div class="qa-card" onclick="nav('page-admin', document.getElementById('menu-admin'))" style="grid-column: span 2;">
+        <i class="material-icons-round">settings</i><span>ADMIN & LAPORAN</span>
+      </div>
     </div>
   </div>
 
@@ -714,7 +718,7 @@ try {
   });
 } catch(e){}
 
-const API_URL = "https://script.google.com/macros/s/AKfycbwcy8a3p0T8a65tMuI0ppR2sb4H9_7_1T7HnJR-mlGpfJAdZfNQCDn0sgklm5dEQJVwHw/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbx1ze3YnyWTDFXlqhc1f9m7BIe9dGMNfTRAcH9OKYquZKf0b8R7676bwytl17Kpk6jnHA/exec"; 
 
 const HASIL_CFG = { pkt: ["PKT004","PKT001","PKT002","PKT001G","PKT003G","RUMUSAN"], teams: { PKT004: ["BLOK 1","BLOK 2","BLOK 3","BLOK 4","BLOK 5"], PKT002: ["TEAM PKT","TEAM 1","TEAM 2","TEAM TKA","TEAM TKA BAJA"], PKT001G:["HABIBI","P.BOWO","MEGA","TEAM TKA","TEAM TKA BAJA"], PKT003G:["TEAM KIRI","TEAM KANAN","TEAM BLOK C","TEAM TKA","TEAM TKA BAJA"] } };
 const MUDA_CFG = { "PKT001G": ["HABIBI", "P.BOWO", "MEGA", "TKA"], "PKT002": ["TEAM PKT", "TEAM 1", "TEAM 2", "TKA"], "PKT003G": ["KIRI", "KANAN", "BLOK C", "TKA"], "PKT004A": ["BLOK 1", "BLOK 2", "BLOK 3", "BLOK 4", "BLOK 5"] };
